@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleLauncher", "BattleLauncher\BattleLauncher.csproj", "{1140F93D-D743-4EA8-B307-9E1859B2080E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1140F93D-D743-4EA8-B307-9E1859B2080E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1140F93D-D743-4EA8-B307-9E1859B2080E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1140F93D-D743-4EA8-B307-9E1859B2080E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1140F93D-D743-4EA8-B307-9E1859B2080E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED91A810-57F9-4193-9221-ABE9B2DE24C5}
+	EndGlobalSection
+EndGlobal
