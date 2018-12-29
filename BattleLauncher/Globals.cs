@@ -4,6 +4,9 @@
     {
         public static string SessionToken { get; set; }
 
+        public static string CurrentGameId { get; set; }
+        public static string PersonaId { get; set; }
+
         private static string bf3GameDir;
 
         public static string BF3GameDir
