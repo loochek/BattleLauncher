@@ -37,8 +37,8 @@
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.serverJoinWorker = new System.ComponentModel.BackgroundWorker();
-            this.gameLaunchWorker = new System.ComponentModel.BackgroundWorker();
+            this.ServerJoinWorker = new System.ComponentModel.BackgroundWorker();
+            this.GameLaunchWorker = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -67,7 +67,7 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(1047, 692);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseDoubleClick);
+            this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
             // 
             // map
             // 
@@ -106,9 +106,10 @@
             // 
             // toolStripStatusLabel1
             // 
+            this.toolStripStatusLabel1.AutoSize = false;
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(500, 17);
+            this.toolStripStatusLabel1.Text = "Idle";
             // 
             // toolStripDropDownButton1
             // 
@@ -120,23 +121,23 @@
             this.toolStripDropDownButton1.ShowDropDownArrow = false;
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(20, 20);
             this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Click += new System.EventHandler(this.toolStripDropDownButton1_Click);
+            this.toolStripDropDownButton1.Click += new System.EventHandler(this.ToolStripDropDownButton1_Click);
             // 
-            // serverJoinWorker
+            // ServerJoinWorker
             // 
-            this.serverJoinWorker.WorkerReportsProgress = true;
-            this.serverJoinWorker.WorkerSupportsCancellation = true;
-            this.serverJoinWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.serverJoinWorker_DoWork);
-            this.serverJoinWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.serverJoinWorker_ProgressChanged);
-            this.serverJoinWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.serverJoinWorker_RunWorkerCompleted);
+            this.ServerJoinWorker.WorkerReportsProgress = true;
+            this.ServerJoinWorker.WorkerSupportsCancellation = true;
+            this.ServerJoinWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ServerJoinWorker_DoWork);
+            this.ServerJoinWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.ServerJoinWorker_ProgressChanged);
+            this.ServerJoinWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ServerJoinWorker_RunWorkerCompleted);
             // 
-            // gameLaunchWorker
+            // GameLaunchWorker
             // 
-            this.gameLaunchWorker.WorkerReportsProgress = true;
-            this.gameLaunchWorker.WorkerSupportsCancellation = true;
-            this.gameLaunchWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.gameLaunchWorker_DoWork);
-            this.gameLaunchWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.gameLaunchWorker_ProgressChanged);
-            this.gameLaunchWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.gameLaunchWorker_RunWorkerCompleted);
+            this.GameLaunchWorker.WorkerReportsProgress = true;
+            this.GameLaunchWorker.WorkerSupportsCancellation = true;
+            this.GameLaunchWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.GameLaunchWorker_DoWork);
+            this.GameLaunchWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.GameLaunchWorker_ProgressChanged);
+            this.GameLaunchWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.GameLaunchWorker_RunWorkerCompleted);
             // 
             // MainWindow
             // 
@@ -165,8 +166,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ping;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.ComponentModel.BackgroundWorker serverJoinWorker;
+        private System.ComponentModel.BackgroundWorker ServerJoinWorker;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-        private System.ComponentModel.BackgroundWorker gameLaunchWorker;
+        private System.ComponentModel.BackgroundWorker GameLaunchWorker;
     }
 }

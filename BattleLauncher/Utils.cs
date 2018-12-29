@@ -8,29 +8,31 @@ namespace BattleLauncher
 {
     public static class Utils
     {
-        static public string doHttpRequest(string url, CookieContainer cookies)
+        static public string DoHttpRequest(string url)
         {
             HttpWebRequest req = WebRequest.CreateHttp(url);
-            req.CookieContainer = cookies;
+            req.CookieContainer = new CookieContainer();
+            req.CookieContainer.Add(new Uri(URL.Battlelog), new Cookie("beaker.session.id", Globals.SessionToken));
             WebResponse resp;
             resp = req.GetResponse();
             return new StreamReader(resp.GetResponseStream()).ReadToEnd();
         }
 
-        static public string doLocalHttpRequest(string url)
+        static public string DoLocalHttpRequest(string url)
         {
             HttpWebRequest req = WebRequest.CreateHttp(url);
             req.Accept = "*/*";
-            req.Headers["Origin"] = "http://battlelog.battlefield.com";
+            req.Headers["Origin"] = URL.Battlelog;
             WebResponse resp;
             resp = req.GetResponse();
             return new StreamReader(resp.GetResponseStream()).ReadToEnd();
         }
 
-        static public string doHttpXmlRequest(string url, CookieContainer cookies)
+        static public string DoHttpXHRRequest(string url)
         {
             HttpWebRequest req = WebRequest.CreateHttp(url);
-            req.CookieContainer = cookies;
+            req.CookieContainer = new CookieContainer();
+            req.CookieContainer.Add(new Uri(URL.Battlelog), new Cookie("beaker.session.id", Globals.SessionToken));
             req.Headers["X-Requested-With"] = "XMLHttpRequest";
             WebResponse resp;
             try
@@ -44,17 +46,10 @@ namespace BattleLauncher
             return new StreamReader(resp.GetResponseStream()).ReadToEnd();
         }
 
-        static public T1 deserializeResponse<T1>(string response) where T1: Battlelog.BattlelogXHRResponse
+        static public T1 DeserializeResponse<T1>(string response) where T1: Battlelog.BattlelogResponse
         {
             T1 resp;
-            try
-            {  
-                resp = JsonConvert.DeserializeObject<T1>(response);
-            }
-            catch (JsonException e)
-            {
-                throw new Exception(e.Message);
-            }
+            resp = JsonConvert.DeserializeObject<T1>(response);
             if (resp.type == "error")
                 throw new Exception("Battlelog faulty response");
             return resp;
@@ -63,33 +58,33 @@ namespace BattleLauncher
 
     namespace Battlelog
     {
-        public class BattlelogXHRResponse
+        public class BattlelogResponse
         {
             public string type;
             public string message;
         }
 
-        public class ServerInfoResponse : BattlelogXHRResponse
+        public class ServerInfoResponse : BattlelogResponse
         {
             public ServerInfo data;
         }
 
-        public class ServerListResponse : BattlelogXHRResponse
+        public class ServerListResponse : BattlelogResponse
         {
             public List<ServerInfo> data;
         }
 
-        public class SlotReservationResponse : BattlelogXHRResponse
+        public class SlotReservationResponse : BattlelogResponse
         {
             public ReservationInfo data;
         }
 
-        public class QueueStatusResponse : BattlelogXHRResponse
+        public class QueueStatusResponse : BattlelogResponse
         {
             public QueueStatusInfo data;
         }
 
-        public class AuthDataResponse : BattlelogXHRResponse
+        public class AuthDataResponse : BattlelogResponse
         {
             public AuthData data;
         }
@@ -134,7 +129,7 @@ namespace BattleLauncher
             public string authCode;
         }
 
-        public class PlayablePersonaResponse : BattlelogXHRResponse
+        public class PlayablePersonaResponse : BattlelogResponse
         {
             public PersonaData data;
         }

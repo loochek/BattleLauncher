@@ -2,12 +2,11 @@
 using System.ComponentModel;
 using System.Net;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Collections.Generic;
 using BattleLauncher.Battlelog;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace BattleLauncher
 {
@@ -22,10 +21,13 @@ namespace BattleLauncher
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            Globals.BF3GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 3", "Install Dir", null);
+            Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
+            Globals.SessionToken = "31af75355585b20b7374ae576ea9b323";
             serverList = new List<ServerInfo>();
-            string json = Utils.doHttpXmlRequest("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?count=30", null);
+            string json = Utils.DoHttpXHRRequest("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset=30&count=30&post-check-sum=31af753555&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=");
             
-            ServerListResponse resp = Utils.deserializeResponse<ServerListResponse>(json);
+            ServerListResponse resp = Utils.DeserializeResponse<ServerListResponse>(json);
             foreach (var i in resp.data)
             {
                 serverList.Add(i);
@@ -33,134 +35,140 @@ namespace BattleLauncher
             }
         }
 
-        private void serverJoinWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void ServerJoinWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            Tuple<string, string> args = e.Argument as Tuple<string, string>;
-            string serverGuid = args.Item1;
-            string userToken = args.Item2;
+            string serverGuid = e.Argument as string;
 
-            CookieContainer cookies = new CookieContainer();
-            cookies.Add(new Uri("http://battlelog.battlefield.com"), new Cookie("beaker.session.id", userToken));
-
-            serverJoinWorker.ReportProgress(0, "Getting server info...");
-            ServerInfo serverInfo = Utils.deserializeResponse<ServerInfoResponse>(Utils.doHttpRequest(String.Format("http://battlelog.battlefield.com/bf3/servers/show/pc/{0}/?json=1&join=true", serverGuid), cookies)).data;
+            ServerJoinWorker.ReportProgress(0, "Getting server info...");
+            ServerInfo serverInfo = Utils.DeserializeResponse<ServerInfoResponse>(Utils.DoHttpRequest(String.Format(URL.BF3ServerInfoShort, serverGuid))).data;
             string gameId = serverInfo.gameId;
 
-            serverJoinWorker.ReportProgress(0, "Getting user info...");
-            PersonaData personaData = Utils.deserializeResponse<PlayablePersonaResponse>(Utils.doHttpRequest("https://battlelog.battlefield.com/bf3/launcher/playablepersona/", cookies)).data;
+            ServerJoinWorker.ReportProgress(0, "Getting user info...");
+            PersonaData personaData = Utils.DeserializeResponse<PlayablePersonaResponse>(Utils.DoHttpRequest(URL.BF3PlayablePersona)).data;
             string personaId = personaData.personaId;
 
-            serverJoinWorker.ReportProgress(0, "Reservating server slot...");
-            ReservationInfo reservation = Utils.deserializeResponse<SlotReservationResponse>(Utils.doHttpRequest(String.Format("http://battlelog.battlefield.com/bf3/launcher/reserveslotbygameid/1/{0}/{1}/1/{2}/0", personaId, gameId, serverGuid), cookies)).data;
+            ServerJoinWorker.ReportProgress(0, "Reservating server slot...");
+            ReservationInfo reservation = Utils.DeserializeResponse<SlotReservationResponse>(Utils.DoHttpRequest(String.Format(URL.BF3ReserveSlot, personaId, gameId, serverGuid))).data;
             bool queued = false;
             if (reservation.joinState == "IN_QUEUE")
                 queued = true;
 
-            serverJoinWorker.ReportProgress(0, "Retrieving auth data...");
-            string authJsonRaw = Utils.doHttpRequest(String.Format("https://battlelog.battlefield.com/bf3/launcher/token/1/{0}", personaId), cookies);
+            ServerJoinWorker.ReportProgress(0, "Retrieving auth data...");
+            string authJsonRaw = Utils.DoHttpRequest(String.Format(URL.BF3AuthData, personaId));
             authJsonRaw = authJsonRaw.Substring(1);
             authJsonRaw = authJsonRaw.Substring(0, authJsonRaw.Length - 2);
-            AuthData authData = Utils.deserializeResponse<AuthDataResponse>(authJsonRaw).data;
+            AuthData authData = Utils.DeserializeResponse<AuthDataResponse>(authJsonRaw).data;
             string loginToken = authData.encryptedToken;
             string authCode = authData.authCode;
             if (queued)
             {
                 while (true)
                 {
-                    if (serverJoinWorker.CancellationPending)
+                    if (ServerJoinWorker.CancellationPending)
                     {
-                        serverJoinWorker.ReportProgress(0, "Cancellation...");
-                        BattlelogXHRResponse leave = Utils.deserializeResponse<BattlelogXHRResponse>(Utils.doHttpRequest(String.Format("http://battlelog.battlefield.com/bf3/launcher/mpleavegameserver/1/{0}/{1}", personaId, gameId), cookies));
-                        if (leave.message == "CANCELED")
-                            serverJoinWorker.ReportProgress(0, "Successful cancellation");
-                        else
-                            serverJoinWorker.ReportProgress(0, "Cancellation failed");
+                        ServerJoinWorker.ReportProgress(0, "Cancellation...");
+                        BattlelogResponse leave = Utils.DeserializeResponse<BattlelogResponse>(Utils.DoHttpRequest(String.Format(URL.BF3LeaveServer, personaId, gameId)));
+                        e.Cancel = true;
                         return;
                     }
-                    QueueStatusInfo queueStatusInfo = Utils.deserializeResponse<QueueStatusResponse>(Utils.doHttpRequest(String.Format("http://battlelog.battlefield.com/bf3/launcher/fetchQueueStatus/1/{0}/{1}", personaId, gameId), cookies)).data;
+                    QueueStatusInfo queueStatusInfo = Utils.DeserializeResponse<QueueStatusResponse>(Utils.DoHttpRequest(String.Format(URL.BF3QueueStatus, personaId, gameId))).data;
                     if (queueStatusInfo.queuePosition == -1)
                         break;
-                    serverJoinWorker.ReportProgress(0, String.Format("Queued: {0}", queueStatusInfo.queuePosition));
+                    ServerJoinWorker.ReportProgress(0, String.Format("Queued: {0}", queueStatusInfo.queuePosition));
                     Thread.Sleep(1000);
                 }
             }
-            if (serverJoinWorker.CancellationPending)
+            if (ServerJoinWorker.CancellationPending)
             {
-                serverJoinWorker.ReportProgress(0, "Cancellation...");
-                BattlelogXHRResponse leave = Utils.deserializeResponse<BattlelogXHRResponse>(Utils.doHttpRequest(String.Format("http://battlelog.battlefield.com/bf3/launcher/mpleavegameserver/1/{0}/{1}", personaId, gameId), cookies));
-                if (leave.message == "CANCELED")
-                    serverJoinWorker.ReportProgress(0, "Successful cancellation");
-                else
-                    serverJoinWorker.ReportProgress(0, "Cancellation failed");
+                ServerJoinWorker.ReportProgress(0, "Cancellation...");
+                BattlelogResponse leave = Utils.DeserializeResponse<BattlelogResponse>(Utils.DoHttpRequest(String.Format(URL.BF3LeaveServer, personaId, gameId)));
                 return;
             }
-            serverJoinWorker.ReportProgress(100, "Joined to server");
+            ServerJoinWorker.ReportProgress(100, "Joined to server");
             e.Result = new Tuple<String, String, String, String>(loginToken, authCode, gameId, personaId);
         }
 
-        private void serverJoinWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void ServerJoinWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             toolStripStatusLabel1.Text = e.UserState as string;
         }
 
-        private void toolStripDropDownButton1_Click(object sender, EventArgs e)
+        private void ToolStripDropDownButton1_Click(object sender, EventArgs e)
         {
-            if (gameLaunchWorker.IsBusy)
-                gameLaunchWorker.CancelAsync();
+            if (GameLaunchWorker.IsBusy)
+                GameLaunchWorker.CancelAsync();
             else
-                serverJoinWorker.CancelAsync();
+                ServerJoinWorker.CancelAsync();
             toolStripDropDownButton1.Enabled = false;
         }
 
-        private void dataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            Tuple<string, string> args = new Tuple<string, string>(serverList[e.RowIndex].guid, "31af75355585b20b7374ae576ea9b323");
-            if (!serverJoinWorker.IsBusy)
+            if (!ServerJoinWorker.IsBusy)
             {
-                serverJoinWorker.RunWorkerAsync(args);
+                ServerJoinWorker.RunWorkerAsync(serverList[e.RowIndex].guid);
                 toolStripDropDownButton1.Enabled = true;
             }
         }
 
-        private void serverJoinWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ServerJoinWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (!e.Cancelled)
             {
-                gameLaunchWorker.RunWorkerAsync(e.Result);
+                GameLaunchWorker.RunWorkerAsync(e.Result);
             }
         }
 
-        private void gameLaunchWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void GameLaunchWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             Tuple <String, String, String, String> authData = e.Argument as Tuple<String, String, String, String>;
             string loginToken = authData.Item1;
             string authCode = authData.Item2;
             string gameId = authData.Item3;
             string personaId = authData.Item4;
-            string launchArgs = @"-webMode MP -Origin_NoAppFocus --activate-webhelper -AuthCode {0} -requestState State_ClaimReservation -requestStateParams ""<data putinsquad =\""true\"" gameid =\""{1}\"" role =\""soldier\"" personaref =\""{2}\"" levelmode =\""mp\"" logintoken =\""{3}\""></data>"" -Online.BlazeLogLevel 2 -Online.DirtysockLogLevel 2";
+
+            GameLaunchWorker.ReportProgress(0, "Starting game...");
 
             ProcessStartInfo process = new ProcessStartInfo();
-            process.FileName = "D:/origin/Battlefield 3/BF3WebHelper.exe";
-            process.Arguments = String.Format(launchArgs, authCode, gameId, personaId, loginToken);
-            process.WorkingDirectory = "D:/origin/Battlefield 3";
+            process.FileName = Globals.BF3ExePath;
+            process.Arguments = String.Format(Globals.GameArgs, authCode, gameId, personaId, loginToken);
+            process.WorkingDirectory = Globals.BF3GameDir;
             Process.Start(process);
+            bool webHelperStarted = false;
+            bool cancelled = false;
             while (true)
             {
-                if (gameLaunchWorker.CancellationPending)
+                if (GameLaunchWorker.CancellationPending)
                 {
+                    if (!cancelled)
+                    {
+                        GameLaunchWorker.ReportProgress(0, "Cancellation...");
+                        BattlelogResponse leave = Utils.DeserializeResponse<BattlelogResponse>(Utils.DoHttpRequest(String.Format(URL.BF3LeaveServer, personaId, gameId)));
+                        cancelled = true;
+                    }
+                    GameLaunchWorker.ReportProgress(0, "Waiting for game to exit...");
                     try
                     {
-                        Utils.doLocalHttpRequest("http://127.0.0.1:4219/killgame");
+                        Utils.DoLocalHttpRequest(URL.KillGame);
                     }
                     catch (WebException)
                     {
-                        return;
+                        if (webHelperStarted)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+                        else
+                        {
+                            Thread.Sleep(500);
+                            continue;
+                        }      
                     }
                 }
                 string state;
                 try
                 {
-                    state = Utils.doLocalHttpRequest("http://127.0.0.1:4219");
+                    state = Utils.DoLocalHttpRequest(URL.WebHelper);
                 }
                 catch (WebException)
                 {
@@ -169,19 +177,23 @@ namespace BattleLauncher
                 }
                 if (state != "null")
                 {
-                    gameLaunchWorker.ReportProgress(0, state.Replace("\t", " ").Trim());
+                    webHelperStarted = true;
+                    GameLaunchWorker.ReportProgress(0, state.Replace("\t", " ").Trim());
                     if (state.Contains("GAMEISGONE"))
+                    {
+                        e.Cancel = true;
                         return;
+                    }
                 }   
             }
         }
 
-        private void gameLaunchWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void GameLaunchWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             toolStripStatusLabel1.Text = e.UserState as string;
         }
 
-        private void gameLaunchWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void GameLaunchWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             toolStripDropDownButton1.Enabled = false;
             toolStripStatusLabel1.Text = "Game closed";
