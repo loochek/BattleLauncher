@@ -30,15 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.map = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Gamemode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.GameLauncher = new System.ComponentModel.BackgroundWorker();
             this.GameListener = new System.ComponentModel.BackgroundWorker();
+            this.map = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Gamemode = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Players = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -55,6 +57,7 @@
             this.map,
             this.name,
             this.Gamemode,
+            this.Players,
             this.ping});
             this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -67,31 +70,8 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(1047, 692);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
-            // 
-            // map
-            // 
-            this.map.HeaderText = "Map";
-            this.map.Name = "map";
-            this.map.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Name";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // Gamemode
-            // 
-            this.Gamemode.HeaderText = "Game mode";
-            this.Gamemode.Name = "Gamemode";
-            this.Gamemode.ReadOnly = true;
-            // 
-            // ping
-            // 
-            this.ping.HeaderText = "Ping";
-            this.ping.Name = "ping";
-            this.ping.ReadOnly = true;
             // 
             // statusBar
             // 
@@ -139,11 +119,49 @@
             this.GameListener.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.GameListener_ProgressChanged);
             this.GameListener.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.GameListener_RunWorkerCompleted);
             // 
+            // map
+            // 
+            this.map.HeaderText = "Map";
+            this.map.Name = "map";
+            this.map.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Name";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // Gamemode
+            // 
+            this.Gamemode.HeaderText = "Game mode";
+            this.Gamemode.Name = "Gamemode";
+            this.Gamemode.ReadOnly = true;
+            // 
+            // Players
+            // 
+            this.Players.HeaderText = "Players";
+            this.Players.Name = "Players";
+            this.Players.ReadOnly = true;
+            // 
+            // ping
+            // 
+            this.ping.HeaderText = "Ping";
+            this.ping.Name = "ping";
+            this.ping.ReadOnly = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(51, 296);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(199, 20);
+            this.textBox1.TabIndex = 2;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1347, 729);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.dataGridView1);
             this.Name = "MainWindow";
@@ -160,14 +178,16 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn map;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Gamemode;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ping;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.ComponentModel.BackgroundWorker GameLauncher;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.ComponentModel.BackgroundWorker GameListener;
+        private System.Windows.Forms.DataGridViewTextBoxColumn map;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Gamemode;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Players;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ping;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

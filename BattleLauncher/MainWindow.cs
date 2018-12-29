@@ -31,7 +31,10 @@ namespace BattleLauncher
             foreach (var i in resp.data)
             {
                 serverList.Add(i);
-                dataGridView1.Rows.Add(i.map, i.name, i.guid, '-');
+                string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
+                if (i.slots.queued.current != 0)
+                    playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
+                dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, '-');
             }
         }
 
@@ -53,13 +56,6 @@ namespace BattleLauncher
             if (reservation.joinState == "IN_QUEUE")
                 queued = true;
 
-            GameLauncher.ReportProgress(0, "Retrieving auth data...");
-            string authJsonRaw = Utils.DoHttpRequest(String.Format(URL.BF3AuthData, Globals.PersonaId));
-            authJsonRaw = authJsonRaw.Substring(1);
-            authJsonRaw = authJsonRaw.Substring(0, authJsonRaw.Length - 2);
-            AuthData authData = Utils.DeserializeResponse<AuthDataResponse>(authJsonRaw).data;
-            string loginToken = authData.encryptedToken;
-            string authCode = authData.authCode;
             if (queued)
             {
                 while (true)
@@ -71,13 +67,28 @@ namespace BattleLauncher
                         e.Cancel = true;
                         return;
                     }
-                    QueueStatusInfo queueStatusInfo = Utils.DeserializeResponse<QueueStatusResponse>(Utils.DoHttpRequest(String.Format(URL.BF3QueueStatus, Globals.PersonaId, Globals.CurrentGameId))).data;
-                    if (queueStatusInfo.queuePosition == -1)
-                        break;
-                    GameLauncher.ReportProgress(0, String.Format("Queued: {0}", queueStatusInfo.queuePosition));
+                    try
+                    {
+                        QueueStatusInfo queueStatusInfo = Utils.DeserializeResponse<QueueStatusResponse>(Utils.DoHttpRequest(String.Format(URL.BF3QueueStatus, Globals.PersonaId, Globals.CurrentGameId))).data;
+                        if (queueStatusInfo.queuePosition == -1)
+                            break;
+                        GameLauncher.ReportProgress(0, String.Format("Queued: {0}", queueStatusInfo.queuePosition));
+                    }      
+                    catch (WebException)
+                    {
+                        GameLauncher.ReportProgress(0, "Queue status unknown");
+                    }
                     Thread.Sleep(1000);
                 }
             }
+
+            GameLauncher.ReportProgress(0, "Retrieving auth data...");
+            string authJsonRaw = Utils.DoHttpRequest(String.Format(URL.BF3AuthData, Globals.PersonaId));
+            authJsonRaw = authJsonRaw.Substring(1);
+            authJsonRaw = authJsonRaw.Substring(0, authJsonRaw.Length - 2);
+            AuthData authData = Utils.DeserializeResponse<AuthDataResponse>(authJsonRaw).data;
+            string loginToken = authData.encryptedToken;
+            string authCode = authData.authCode;
 
             if (GameLauncher.CancellationPending)
             {
@@ -191,11 +202,22 @@ namespace BattleLauncher
 
         private void DataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (!GameLauncher.IsBusy)
+            if (!(GameLauncher.IsBusy || GameListener.IsBusy))
             {
                 GameLauncher.RunWorkerAsync(serverList[e.RowIndex].guid);
                 toolStripDropDownButton1.Enabled = true;
             }
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            textBox1.Text = serverList[e.RowIndex].guid;
+            NumPlayersResponse updatedInfo = Utils.DeserializeResponse2<NumPlayersResponse>(Utils.DoHttpXHRRequest(String.Format(URL.BF3NumPlayersOnServer, serverList[e.RowIndex].guid)));
+            string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
+            if (updatedInfo.slots.queued.current != 0)
+                playerCountString = String.Format("{0} [{1}]", playerCountString, updatedInfo.slots.queued.current);
+            dataGridView1.Rows[e.RowIndex].Cells[0].Value = updatedInfo.map;
+            dataGridView1.Rows[e.RowIndex].Cells[3].Value = playerCountString;
         }
     }
 }

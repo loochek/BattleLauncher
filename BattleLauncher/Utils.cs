@@ -54,6 +54,13 @@ namespace BattleLauncher
                 throw new Exception("Battlelog faulty response");
             return resp;
         }
+
+        static public T1 DeserializeResponse2<T1>(string response)
+        {
+            T1 resp;
+            resp = JsonConvert.DeserializeObject<T1>(response);
+            return resp;
+        }
     }
 
     namespace Battlelog
@@ -108,6 +115,7 @@ namespace BattleLauncher
             public bool HasPassword;
             public string country;
             public string name;
+            public SlotsInfo slots;
         }
 
         public class ReservationInfo
@@ -132,6 +140,27 @@ namespace BattleLauncher
         public class PlayablePersonaResponse : BattlelogResponse
         {
             public PersonaData data;
+        }
+
+        public class SlotsInfo
+        {
+            [JsonProperty("1")]
+            public PlayersCountInfo queued;
+            [JsonProperty("2")]
+            public PlayersCountInfo normal;
+
+            public class PlayersCountInfo
+            {
+                public int current;
+                public int max;
+            }
+        }
+
+        public class NumPlayersResponse
+        {
+            public int mapMode;
+            public SlotsInfo slots;
+            public string map;
         }
     }
 }

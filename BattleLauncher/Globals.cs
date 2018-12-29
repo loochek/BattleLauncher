@@ -55,6 +55,7 @@
         public const string BF3AuthData = "https://battlelog.battlefield.com/bf3/launcher/token/1/{0}";
         public const string BF3LeaveServer = "http://battlelog.battlefield.com/bf3/launcher/mpleavegameserver/1/{0}/{1}";
         public const string BF3QueueStatus = "http://battlelog.battlefield.com/bf3/launcher/fetchQueueStatus/1/{0}/{1}";
+        public const string BF3NumPlayersOnServer = "http://battlelog.battlefield.com/bf3/servers/getNumPlayersOnServer/pc/{0}/";
         public const string WebHelper = "http://127.0.0.1:4219";
         public const string KillGame = "http://127.0.0.1:4219/killgame";
     }
