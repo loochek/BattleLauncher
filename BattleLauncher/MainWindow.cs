@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using BattleLauncher.Battlelog;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Net.NetworkInformation;
 
 namespace BattleLauncher
 {
@@ -25,17 +26,7 @@ namespace BattleLauncher
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
             Globals.SessionToken = "31af75355585b20b7374ae576ea9b323";
             serverList = new List<ServerInfo>();
-            string json = Utils.DoHttpXHRRequest("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset=30&count=30&post-check-sum=31af753555&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=");
-            
-            ServerListResponse resp = Utils.DeserializeResponse<ServerListResponse>(json);
-            foreach (var i in resp.data)
-            {
-                serverList.Add(i);
-                string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
-                if (i.slots.queued.current != 0)
-                    playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, '-');
-            }
+            ServerListRetriever.RunWorkerAsync(serverList.Count);
         }
 
         private void GameLauncher_DoWork(object sender, DoWorkEventArgs e)
@@ -202,6 +193,8 @@ namespace BattleLauncher
 
         private void DataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
             if (!(GameLauncher.IsBusy || GameListener.IsBusy))
             {
                 GameLauncher.RunWorkerAsync(serverList[e.RowIndex].guid);
@@ -211,6 +204,8 @@ namespace BattleLauncher
 
         private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.RowIndex == -1)
+                return;
             textBox1.Text = serverList[e.RowIndex].guid;
             NumPlayersResponse updatedInfo = Utils.DeserializeResponse2<NumPlayersResponse>(Utils.DoHttpXHRRequest(String.Format(URL.BF3NumPlayersOnServer, serverList[e.RowIndex].guid)));
             string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
@@ -218,6 +213,53 @@ namespace BattleLauncher
                 playerCountString = String.Format("{0} [{1}]", playerCountString, updatedInfo.slots.queued.current);
             dataGridView1.Rows[e.RowIndex].Cells[0].Value = updatedInfo.map;
             dataGridView1.Rows[e.RowIndex].Cells[3].Value = playerCountString;
+        }
+
+        private void dataGridView1_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (dataGridView1.DisplayedRowCount(false) + dataGridView1.FirstDisplayedScrollingRowIndex >= dataGridView1.RowCount)
+            {
+                ServerListRetriever.RunWorkerAsync(serverList.Count);
+            }
+        }
+
+        private void ServerListRetriever_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string json = Utils.DoHttpXHRRequest(String.Format("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset={0}&count=30&post-check-sum=31af753555&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=", e.Argument));
+            e.Result = Utils.DeserializeResponse<ServerListResponse>(json);
+        }
+
+        private void ServerListRetriever_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ServerListResponse resp = e.Result as ServerListResponse;
+            foreach (var i in resp.data)
+            {
+                serverList.Add(i);
+                string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
+                if (i.slots.queued.current != 0)
+                    playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
+                dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, '-');
+            }
+        }
+
+        private void Pinger_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            
+        }
+
+        private void Pinger_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> servers = e.Argument as List<string>;
+            Ping ping = new Ping();
+            foreach (string i in servers)
+            {
+                PingReply pr = ping.Send(i);
+            }
+        }
+
+        private void Pinger_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            
         }
     }
 }

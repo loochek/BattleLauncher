@@ -41,6 +41,8 @@
             this.Players = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.ServerListRetriever = new System.ComponentModel.BackgroundWorker();
+            this.Pinger = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -68,10 +70,11 @@
             this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1047, 692);
+            this.dataGridView1.Size = new System.Drawing.Size(1047, 473);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
+            this.dataGridView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView1_Scroll);
             // 
             // statusBar
             // 
@@ -156,6 +159,18 @@
             this.textBox1.Size = new System.Drawing.Size(199, 20);
             this.textBox1.TabIndex = 2;
             // 
+            // ServerListRetriever
+            // 
+            this.ServerListRetriever.WorkerReportsProgress = true;
+            this.ServerListRetriever.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ServerListRetriever_DoWork);
+            this.ServerListRetriever.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ServerListRetriever_RunWorkerCompleted);
+            // 
+            // Pinger
+            // 
+            this.Pinger.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Pinger_DoWork);
+            this.Pinger.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.Pinger_ProgressChanged);
+            this.Pinger.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.Pinger_RunWorkerCompleted);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,5 +204,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Players;
         private System.Windows.Forms.DataGridViewTextBoxColumn ping;
         private System.Windows.Forms.TextBox textBox1;
+        private System.ComponentModel.BackgroundWorker ServerListRetriever;
+        private System.ComponentModel.BackgroundWorker Pinger;
     }
 }
