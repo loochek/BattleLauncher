@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Net;
 using System.Windows.Forms;
@@ -8,12 +9,15 @@ using BattleLauncher.Battlelog;
 using System.Diagnostics;
 using Microsoft.Win32;
 using System.Net.NetworkInformation;
+using System.Collections.Concurrent;
 
 namespace BattleLauncher
 {
     public partial class MainWindow : Form
     {
         private List<ServerInfo> serverList;
+
+        private BlockingCollection<Tuple<int, string>> pingQueue;
 
         public MainWindow()
         {
@@ -24,9 +28,11 @@ namespace BattleLauncher
         {
             Globals.BF3GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 3", "Install Dir", null);
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
-            Globals.SessionToken = "31af75355585b20b7374ae576ea9b323";
+            Globals.SessionToken = "6c43dbc24d2fa3982b8fe6d0eea24a25";
             serverList = new List<ServerInfo>();
+            pingQueue = new BlockingCollection<Tuple<int, string>>();
             ServerListRetriever.RunWorkerAsync(serverList.Count);
+            Pinger.RunWorkerAsync();
         }
 
         private void GameLauncher_DoWork(object sender, DoWorkEventArgs e)
@@ -91,10 +97,12 @@ namespace BattleLauncher
 
             GameLauncher.ReportProgress(0, "Starting game...");
 
-            ProcessStartInfo process = new ProcessStartInfo();
-            process.FileName = Globals.BF3ExePath;
-            process.Arguments = String.Format(Globals.GameArgs, authCode, Globals.CurrentGameId, Globals.PersonaId, loginToken);
-            process.WorkingDirectory = Globals.BF3GameDir;
+            ProcessStartInfo process = new ProcessStartInfo
+            {
+                FileName = Globals.BF3ExePath,
+                Arguments = String.Format(Globals.GameArgs, authCode, Globals.CurrentGameId, Globals.PersonaId, loginToken),
+                WorkingDirectory = Globals.BF3GameDir
+            };
             Process.Start(process);
         }
 
@@ -207,6 +215,8 @@ namespace BattleLauncher
             if (e.RowIndex == -1)
                 return;
             textBox1.Text = serverList[e.RowIndex].guid;
+            if (serverList[e.RowIndex].ip != "")
+                pingQueue.Add(new Tuple<int, string>(e.RowIndex, serverList[e.RowIndex].ip));
             NumPlayersResponse updatedInfo = Utils.DeserializeResponse2<NumPlayersResponse>(Utils.DoHttpXHRRequest(String.Format(URL.BF3NumPlayersOnServer, serverList[e.RowIndex].guid)));
             string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
             if (updatedInfo.slots.queued.current != 0)
@@ -226,40 +236,50 @@ namespace BattleLauncher
         private void ServerListRetriever_DoWork(object sender, DoWorkEventArgs e)
         {
             string json = Utils.DoHttpXHRRequest(String.Format("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset={0}&count=30&post-check-sum=31af753555&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=", e.Argument));
-            e.Result = Utils.DeserializeResponse<ServerListResponse>(json);
+            e.Result = new Tuple<int, ServerListResponse>((int)e.Argument, Utils.DeserializeResponse<ServerListResponse>(json));
         }
 
         private void ServerListRetriever_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            ServerListResponse resp = e.Result as ServerListResponse;
-            foreach (var i in resp.data)
+            Tuple<int, ServerListResponse> resp = e.Result as Tuple<int, ServerListResponse>;
+            int j = 0;
+            foreach (var i in resp.Item2.data)
             {
                 serverList.Add(i);
                 string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, '-');
+                dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, "-----");
+                if (i.ip != "")
+                    pingQueue.Add(new Tuple<int, string>(resp.Item1 + j, i.ip));
+                j++;
             }
-        }
-
-        private void Pinger_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            
         }
 
         private void Pinger_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<string> servers = e.Argument as List<string>;
-            Ping ping = new Ping();
-            foreach (string i in servers)
+            while (true)
             {
-                PingReply pr = ping.Send(i);
+                if (pingQueue.Count == 0)
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+                Ping ping = new Ping();
+                while (pingQueue.Count != 0)
+                {
+                    Tuple<int, string> i = pingQueue.Take() as Tuple<int, string>;
+                    PingReply pr = ping.Send(i.Item2);
+                    Pinger.ReportProgress(0, new Tuple<int, long>(i.Item1, pr.RoundtripTime));
+                }
             }
         }
 
         private void Pinger_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            
+            Tuple<int, long> res = e.UserState as Tuple<int, long>;
+            dataGridView1.Rows[res.Item1].Cells[4].ValueType = res.Item2.GetType();
+            dataGridView1.Rows[res.Item1].Cells[4].Value = res.Item2.ToString();
         }
     }
 }

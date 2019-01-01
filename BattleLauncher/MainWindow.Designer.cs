@@ -30,16 +30,16 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.statusBar = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.GameLauncher = new System.ComponentModel.BackgroundWorker();
-            this.GameListener = new System.ComponentModel.BackgroundWorker();
             this.map = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Gamemode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Players = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.GameLauncher = new System.ComponentModel.BackgroundWorker();
+            this.GameListener = new System.ComponentModel.BackgroundWorker();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.ServerListRetriever = new System.ComponentModel.BackgroundWorker();
             this.Pinger = new System.ComponentModel.BackgroundWorker();
@@ -75,6 +75,36 @@
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
             this.dataGridView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView1_Scroll);
+            // 
+            // map
+            // 
+            this.map.HeaderText = "Map";
+            this.map.Name = "map";
+            this.map.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Name";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // Gamemode
+            // 
+            this.Gamemode.HeaderText = "Game mode";
+            this.Gamemode.Name = "Gamemode";
+            this.Gamemode.ReadOnly = true;
+            // 
+            // Players
+            // 
+            this.Players.HeaderText = "Players";
+            this.Players.Name = "Players";
+            this.Players.ReadOnly = true;
+            // 
+            // ping
+            // 
+            this.ping.HeaderText = "Ping";
+            this.ping.Name = "ping";
+            this.ping.ReadOnly = true;
             // 
             // statusBar
             // 
@@ -122,36 +152,6 @@
             this.GameListener.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.GameListener_ProgressChanged);
             this.GameListener.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.GameListener_RunWorkerCompleted);
             // 
-            // map
-            // 
-            this.map.HeaderText = "Map";
-            this.map.Name = "map";
-            this.map.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Name";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // Gamemode
-            // 
-            this.Gamemode.HeaderText = "Game mode";
-            this.Gamemode.Name = "Gamemode";
-            this.Gamemode.ReadOnly = true;
-            // 
-            // Players
-            // 
-            this.Players.HeaderText = "Players";
-            this.Players.Name = "Players";
-            this.Players.ReadOnly = true;
-            // 
-            // ping
-            // 
-            this.ping.HeaderText = "Ping";
-            this.ping.Name = "ping";
-            this.ping.ReadOnly = true;
-            // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(51, 296);
@@ -167,9 +167,9 @@
             // 
             // Pinger
             // 
+            this.Pinger.WorkerReportsProgress = true;
             this.Pinger.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Pinger_DoWork);
             this.Pinger.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.Pinger_ProgressChanged);
-            this.Pinger.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.Pinger_RunWorkerCompleted);
             // 
             // MainWindow
             // 
