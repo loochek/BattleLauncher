@@ -2,64 +2,56 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace BattleLauncher
 {
     public static class Utils
     {
-        static public string DoHttpRequest(string url)
+        static public Task<string> DoHttpRequestAsync(string url)
         {
-            HttpWebRequest req = WebRequest.CreateHttp(url);
-            req.CookieContainer = new CookieContainer();
-            req.CookieContainer.Add(new Uri(URL.Battlelog), new Cookie("beaker.session.id", Globals.SessionToken));
-            WebResponse resp;
-            resp = req.GetResponse();
-            return new StreamReader(resp.GetResponseStream()).ReadToEnd();
-        }
-
-        static public string DoLocalHttpRequest(string url)
-        {
-            HttpWebRequest req = WebRequest.CreateHttp(url);
-            req.Accept = "*/*";
-            req.Headers["Origin"] = URL.Battlelog;
-            WebResponse resp;
-            resp = req.GetResponse();
-            return new StreamReader(resp.GetResponseStream()).ReadToEnd();
-        }
-
-        static public string DoHttpXHRRequest(string url)
-        {
-            HttpWebRequest req = WebRequest.CreateHttp(url);
-            req.CookieContainer = new CookieContainer();
-            req.CookieContainer.Add(new Uri(URL.Battlelog), new Cookie("beaker.session.id", Globals.SessionToken));
-            req.Headers["X-Requested-With"] = "XMLHttpRequest";
-            WebResponse resp;
-            try
+            return Task.Run(async () =>
             {
-                resp = req.GetResponse();
-            }
-            catch (Exception e)
+                WebClient wc = new WebClient();
+                wc.Headers.Add(HttpRequestHeader.Cookie, "beaker.session.id=" + Globals.SessionToken);
+                wc.Headers.Add("X-Requested-With", "XMLHttpRequest");
+                return await wc.DownloadStringTaskAsync(url);
+            });
+        }
+
+        static public async Task<string> DoLocalHttpRequestAsync(string url)
+        {
+            return await Task.Run(async () =>
             {
-                throw new Exception(e.Message);
-            }
-            return new StreamReader(resp.GetResponseStream()).ReadToEnd();
+
+                WebClient wc = new WebClient();
+                wc.Headers.Add(HttpRequestHeader.Accept, "*/*");
+                wc.Headers.Add("Origin", URL.Battlelog);
+                return await wc.DownloadStringTaskAsync(url);
+            });
         }
 
-        static public T1 DeserializeResponse<T1>(string response) where T1: Battlelog.BattlelogResponse
+        static public async Task<T> DeserializeResponseAsync<T>(string response) where T: Battlelog.BattlelogResponse
         {
-            T1 resp;
-            resp = JsonConvert.DeserializeObject<T1>(response);
-            if (resp.type == "error")
-                throw new Exception("Battlelog faulty response");
-            return resp;
+            return await Task.Run(() =>
+            {
+                T resp;
+                resp = JsonConvert.DeserializeObject<T>(response);
+                if (resp.type == "error")
+                    throw new Exception("Battlelog faulty response");
+                return resp;
+            });
         }
 
-        static public T1 DeserializeResponse2<T1>(string response)
+        static public async Task<T> DeserializeResponse2Async<T>(string response)
         {
-            T1 resp;
-            resp = JsonConvert.DeserializeObject<T1>(response);
-            return resp;
+            return await Task.Run(() =>
+            {
+                T resp;
+                resp = JsonConvert.DeserializeObject<T>(response);
+                return resp;
+            }); 
         }
     }
 
