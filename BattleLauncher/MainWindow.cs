@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Net;
 using System.Windows.Forms;
@@ -17,8 +16,6 @@ namespace BattleLauncher
     {
         private List<ServerInfo> serverList;
 
-        private BlockingCollection<Tuple<int, string>> pingQueue;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -30,9 +27,7 @@ namespace BattleLauncher
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
             Globals.SessionToken = "6c43dbc24d2fa3982b8fe6d0eea24a25";
             serverList = new List<ServerInfo>();
-            pingQueue = new BlockingCollection<Tuple<int, string>>();
             ServerListRetriever.RunWorkerAsync(serverList.Count);
-            Pinger.RunWorkerAsync();
         }
 
         private void GameLauncher_DoWork(object sender, DoWorkEventArgs e)
@@ -215,8 +210,6 @@ namespace BattleLauncher
             if (e.RowIndex == -1)
                 return;
             textBox1.Text = serverList[e.RowIndex].guid;
-            if (serverList[e.RowIndex].ip != "")
-                pingQueue.Add(new Tuple<int, string>(e.RowIndex, serverList[e.RowIndex].ip));
             NumPlayersResponse updatedInfo = Utils.DeserializeResponse2<NumPlayersResponse>(Utils.DoHttpXHRRequest(String.Format(URL.BF3NumPlayersOnServer, serverList[e.RowIndex].guid)));
             string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
             if (updatedInfo.slots.queued.current != 0)
@@ -242,7 +235,6 @@ namespace BattleLauncher
         private void ServerListRetriever_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Tuple<int, ServerListResponse> resp = e.Result as Tuple<int, ServerListResponse>;
-            int j = 0;
             foreach (var i in resp.Item2.data)
             {
                 serverList.Add(i);
@@ -250,36 +242,7 @@ namespace BattleLauncher
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
                 dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, "-----");
-                if (i.ip != "")
-                    pingQueue.Add(new Tuple<int, string>(resp.Item1 + j, i.ip));
-                j++;
             }
-        }
-
-        private void Pinger_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (true)
-            {
-                if (pingQueue.Count == 0)
-                {
-                    Thread.Sleep(1000);
-                    continue;
-                }
-                Ping ping = new Ping();
-                while (pingQueue.Count != 0)
-                {
-                    Tuple<int, string> i = pingQueue.Take() as Tuple<int, string>;
-                    PingReply pr = ping.Send(i.Item2);
-                    Pinger.ReportProgress(0, new Tuple<int, long>(i.Item1, pr.RoundtripTime));
-                }
-            }
-        }
-
-        private void Pinger_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            Tuple<int, long> res = e.UserState as Tuple<int, long>;
-            dataGridView1.Rows[res.Item1].Cells[4].ValueType = res.Item2.GetType();
-            dataGridView1.Rows[res.Item1].Cells[4].Value = res.Item2.ToString();
         }
     }
 }

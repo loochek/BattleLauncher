@@ -42,7 +42,6 @@
             this.GameListener = new System.ComponentModel.BackgroundWorker();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.ServerListRetriever = new System.ComponentModel.BackgroundWorker();
-            this.Pinger = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -165,12 +164,6 @@
             this.ServerListRetriever.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ServerListRetriever_DoWork);
             this.ServerListRetriever.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ServerListRetriever_RunWorkerCompleted);
             // 
-            // Pinger
-            // 
-            this.Pinger.WorkerReportsProgress = true;
-            this.Pinger.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Pinger_DoWork);
-            this.Pinger.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.Pinger_ProgressChanged);
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,6 +198,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ping;
         private System.Windows.Forms.TextBox textBox1;
         private System.ComponentModel.BackgroundWorker ServerListRetriever;
-        private System.ComponentModel.BackgroundWorker Pinger;
     }
 }
