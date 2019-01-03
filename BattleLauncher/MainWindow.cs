@@ -9,6 +9,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BattleLauncher
 {
@@ -67,12 +68,13 @@ namespace BattleLauncher
                     {
                         toolStripStatusLabel1.Text = "Queue status unknown";
                     }
-                    await Task.Run(() => Thread.Sleep(1000));
+                    await Task.Delay(1000);
                 }
             }
 
             toolStripStatusLabel1.Text = "Retrieving auth data...";
-            string authJsonRaw = await Utils.DoHttpRequestAsync(String.Format(URL.BF3AuthData, Globals.PersonaId));
+            string authJsonRaw;
+            authJsonRaw = await Utils.DoHttpRequestAsync(String.Format(URL.BF3AuthData, Globals.PersonaId));
             authJsonRaw = authJsonRaw.Substring(1);
             authJsonRaw = authJsonRaw.Substring(0, authJsonRaw.Length - 2);
             AuthData authData = (await Utils.DeserializeResponseAsync<AuthDataResponse>(authJsonRaw)).data;
@@ -122,7 +124,7 @@ namespace BattleLauncher
                     }
                     catch (Exception)
                     {
-                        await Task.Run(() => Thread.Sleep(500));
+                        await Task.Delay(500);
                         continue;
                     }
                 }
@@ -140,7 +142,7 @@ namespace BattleLauncher
                         Busy = false;
                         return;
                     }
-                    await Task.Run(() => Thread.Sleep(500));
+                    await Task.Delay(500);
                     continue;
                 }
                 if (state != "null")
@@ -157,6 +159,11 @@ namespace BattleLauncher
                 }
             }
         }
+        private int ServerIndex2Row(int serverIndex)
+        {
+            DataGridViewRow row = dataGridView1.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Index"].Value.Equals(serverIndex)).First();
+            return row.Index;
+        }
 
         private async void GetServerList()
         {
@@ -168,15 +175,43 @@ namespace BattleLauncher
                 string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                dataGridView1.Rows.Add(i.map, i.name, i.guid, playerCountString, '-');
+                dataGridView1.Rows.Add(serverList.Count - 1, i.map, i.name, i.guid, playerCountString, '-');
+                UpdatePing(serverList.Count - 1);
             }
+        }
+
+        private async void UpdateServerInfo(int serverIndex)
+        {
+            textBox1.Text = serverList[serverIndex].guid;
+            NumPlayersResponse updatedInfo = await Utils.DeserializeResponse2Async<NumPlayersResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3NumPlayersOnServer, serverList[serverIndex].guid)));
+            string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
+            if (updatedInfo.slots.queued.current != 0)
+                playerCountString = String.Format("{0} [{1}]", playerCountString, updatedInfo.slots.queued.current);
+            serverList[serverIndex].map = updatedInfo.map;
+            serverList[serverIndex].slots = updatedInfo.slots;
+            int rowIndex = ServerIndex2Row(serverIndex);
+            dataGridView1.Rows[rowIndex].Cells["Map"].Value = updatedInfo.map;
+            dataGridView1.Rows[rowIndex].Cells["Players"].Value = playerCountString;
+        }
+
+        private async void UpdatePing(int serverIndex)
+        {
+            int ping;
+            if (serverList[serverIndex].ip == "")
+                ping = -1;
+            else
+            {
+                Ping p = new Ping();
+                ping = (int)(await p.SendPingAsync(serverList[serverIndex].ip)).RoundtripTime;
+            }
+            dataGridView1.Rows[ServerIndex2Row(serverIndex)].Cells["Ping"].Value = ping;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
             Globals.BF3GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 3", "Install Dir", null);
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
-            Globals.SessionToken = "6c43dbc24d2fa3982b8fe6d0eea24a25";
+            Globals.SessionToken = "03e73a9a56d830856333ebe9b6a24a72";
             serverList = new List<ServerInfo>();
             GetServerList();
         }
@@ -191,20 +226,7 @@ namespace BattleLauncher
             if (e.RowIndex == -1)
                 return;
             if (!Busy)
-                RunGame(serverList[e.RowIndex].guid);
-        }
-
-        private async void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.RowIndex == -1)
-                return;
-            textBox1.Text = serverList[e.RowIndex].guid;
-            NumPlayersResponse updatedInfo = await Utils.DeserializeResponse2Async<NumPlayersResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3NumPlayersOnServer, serverList[e.RowIndex].guid)));
-            string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
-            if (updatedInfo.slots.queued.current != 0)
-                playerCountString = String.Format("{0} [{1}]", playerCountString, updatedInfo.slots.queued.current);
-            dataGridView1.Rows[e.RowIndex].Cells[0].Value = updatedInfo.map;
-            dataGridView1.Rows[e.RowIndex].Cells[3].Value = playerCountString;
+                RunGame(serverList[(int)dataGridView1.Rows[e.RowIndex].Cells["Index"].Value].guid);
         }
 
         private void dataGridView1_Scroll(object sender, ScrollEventArgs e)
@@ -213,6 +235,15 @@ namespace BattleLauncher
             {
                 GetServerList();
             }
+        }
+
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows[0].Index == -1)
+                return;
+            int serverIndex = (int)dataGridView1.SelectedRows[0].Cells["Index"].Value;
+            UpdateServerInfo(serverIndex);
+            UpdatePing(serverIndex);
         }
     }
 }

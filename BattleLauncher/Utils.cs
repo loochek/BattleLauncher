@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -11,30 +12,29 @@ namespace BattleLauncher
     {
         static public Task<string> DoHttpRequestAsync(string url)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 WebClient wc = new WebClient();
                 wc.Headers.Add(HttpRequestHeader.Cookie, "beaker.session.id=" + Globals.SessionToken);
                 wc.Headers.Add("X-Requested-With", "XMLHttpRequest");
-                return await wc.DownloadStringTaskAsync(url);
+                return wc.DownloadString(url);
             });
         }
 
-        static public async Task<string> DoLocalHttpRequestAsync(string url)
+        static public Task<string> DoLocalHttpRequestAsync(string url)
         {
-            return await Task.Run(async () =>
+            return Task.Run(() =>
             {
-
                 WebClient wc = new WebClient();
                 wc.Headers.Add(HttpRequestHeader.Accept, "*/*");
                 wc.Headers.Add("Origin", URL.Battlelog);
-                return await wc.DownloadStringTaskAsync(url);
+                return wc.DownloadString(url);
             });
         }
 
-        static public async Task<T> DeserializeResponseAsync<T>(string response) where T: Battlelog.BattlelogResponse
+        static public Task<T> DeserializeResponseAsync<T>(string response) where T: Battlelog.BattlelogResponse
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 T resp;
                 resp = JsonConvert.DeserializeObject<T>(response);
@@ -44,9 +44,9 @@ namespace BattleLauncher
             });
         }
 
-        static public async Task<T> DeserializeResponse2Async<T>(string response)
+        static public Task<T> DeserializeResponse2Async<T>(string response)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 T resp;
                 resp = JsonConvert.DeserializeObject<T>(response);
@@ -108,6 +108,7 @@ namespace BattleLauncher
             public string country;
             public string name;
             public SlotsInfo slots;
+            public int ping;
         }
 
         public class ReservationInfo
@@ -119,7 +120,7 @@ namespace BattleLauncher
         {
             public string personaId;
             public string personaName;
-            public string allowRunGame;
+            public bool allowRunGame;
             public bool banned;
         }
 

@@ -30,15 +30,16 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.map = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Gamemode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Players = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.statusBar = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -52,6 +53,7 @@
             this.dataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Index,
             this.map,
             this.name,
             this.Gamemode,
@@ -68,39 +70,9 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(1047, 473);
             this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
             this.dataGridView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView1_Scroll);
-            // 
-            // map
-            // 
-            this.map.HeaderText = "Map";
-            this.map.Name = "map";
-            this.map.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Name";
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // Gamemode
-            // 
-            this.Gamemode.HeaderText = "Game mode";
-            this.Gamemode.Name = "Gamemode";
-            this.Gamemode.ReadOnly = true;
-            // 
-            // Players
-            // 
-            this.Players.HeaderText = "Players";
-            this.Players.Name = "Players";
-            this.Players.ReadOnly = true;
-            // 
-            // ping
-            // 
-            this.ping.HeaderText = "Ping";
-            this.ping.Name = "ping";
-            this.ping.ReadOnly = true;
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // statusBar
             // 
@@ -139,6 +111,43 @@
             this.textBox1.Size = new System.Drawing.Size(199, 20);
             this.textBox1.TabIndex = 2;
             // 
+            // Index
+            // 
+            this.Index.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.Index.HeaderText = "Index";
+            this.Index.Name = "Index";
+            this.Index.ReadOnly = true;
+            // 
+            // map
+            // 
+            this.map.HeaderText = "Map";
+            this.map.Name = "map";
+            this.map.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Name";
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // Gamemode
+            // 
+            this.Gamemode.HeaderText = "Game mode";
+            this.Gamemode.Name = "Gamemode";
+            this.Gamemode.ReadOnly = true;
+            // 
+            // Players
+            // 
+            this.Players.HeaderText = "Players";
+            this.Players.Name = "Players";
+            this.Players.ReadOnly = true;
+            // 
+            // ping
+            // 
+            this.ping.HeaderText = "Ping";
+            this.ping.Name = "ping";
+            this.ping.ReadOnly = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -164,11 +173,12 @@
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Index;
         private System.Windows.Forms.DataGridViewTextBoxColumn map;
         private System.Windows.Forms.DataGridViewTextBoxColumn name;
         private System.Windows.Forms.DataGridViewTextBoxColumn Gamemode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Players;
         private System.Windows.Forms.DataGridViewTextBoxColumn ping;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
