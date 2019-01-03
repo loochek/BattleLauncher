@@ -40,6 +40,7 @@
             this.Gamemode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Players = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ping = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
@@ -61,14 +62,14 @@
             this.ping});
             this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView1.Location = new System.Drawing.Point(300, 12);
+            this.dataGridView1.Location = new System.Drawing.Point(320, 12);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1047, 473);
+            this.dataGridView1.Size = new System.Drawing.Size(606, 432);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
             this.dataGridView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView1_Scroll);
@@ -79,9 +80,9 @@
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripDropDownButton1});
-            this.statusBar.Location = new System.Drawing.Point(0, 707);
+            this.statusBar.Location = new System.Drawing.Point(0, 447);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(1347, 22);
+            this.statusBar.Size = new System.Drawing.Size(1226, 22);
             this.statusBar.SizingGrip = false;
             this.statusBar.TabIndex = 1;
             // 
@@ -117,6 +118,7 @@
             this.Index.HeaderText = "Index";
             this.Index.Name = "Index";
             this.Index.ReadOnly = true;
+            this.Index.Visible = false;
             // 
             // map
             // 
@@ -148,11 +150,21 @@
             this.ping.Name = "ping";
             this.ping.ReadOnly = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Location = new System.Drawing.Point(932, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(282, 432);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Filter";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1347, 729);
+            this.ClientSize = new System.Drawing.Size(1226, 469);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.dataGridView1);
@@ -180,5 +192,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Gamemode;
         private System.Windows.Forms.DataGridViewTextBoxColumn Players;
         private System.Windows.Forms.DataGridViewTextBoxColumn ping;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

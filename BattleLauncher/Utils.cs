@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace BattleLauncher
@@ -53,10 +55,78 @@ namespace BattleLauncher
                 return resp;
             }); 
         }
+
+        public static string GetMapName(string id)
+        {
+            switch (id)
+            {
+                case "MP_001":
+                    return "Grand Bazaar";
+                case "MP_003":
+                    return "Tehran Highway";
+                case "MP_007":
+                    return "Caspian Border";
+                case "MP_011":
+                    return "Seine Crossing";
+                case "MP_012":
+                    return "Operation Firestorm";
+                case "MP_013":
+                    return "Damavand Peak";
+                case "MP_017":
+                    return "Noshahr Canals";
+                case "MP_018":
+                    return "Kharg Island";
+                case "MP_Subway":
+                    return "Operation Metro";
+                case "XP1_001":
+                    return "Strike at Karkand";
+                case "XP1_002":
+                    return "Gulf of Oman";
+                case "XP1_003":
+                    return "Sharqi Peninsula";
+                case "XP1_004":
+                    return "Wake Island";
+                case "XP2_Factory":
+                    return "Scrapmetal";
+                case "XP2_Office":
+                    return "Operation 925";
+                case "XP2_Palace":
+                    return "Donya Fortress";
+                case "XP2_Skybar":
+                    return "Ziba Tower";
+                case "XP3_Alborz":
+                    return "Alborz Mountains";
+                case "XP3_Desert":
+                    return "Bandar Desert";
+                case "XP3_Shield":
+                    return "Armored Shield";
+                case "XP3_Valley":
+                    return "Death Valley";
+                case "XP4_FD":
+                    return "Markaz Monolith";
+                case "XP4_Parl":
+                    return "Azadi Palace";
+                case "XP4_Quake":
+                    return "Epicenter";
+                case "XP4_Rubble":
+                    return "Talah Market";
+                case "XP5_001":
+                    return "Operation Riverside";
+                case "XP5_002":
+                    return "Nebandan Flats";
+                case "XP5_003":
+                    return "Kiasar Railroad";
+                case "XP5_004":
+                    return "Sabalan Pipeline";
+                default:
+                    return "Unknown map ID";
+            }
+        }
     }
 
     namespace Battlelog
     {
+
         public class BattlelogResponse
         {
             public string type;

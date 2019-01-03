@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Reflection;
 
 namespace BattleLauncher
 {
@@ -167,7 +168,7 @@ namespace BattleLauncher
 
         private async void GetServerList()
         {
-            string json = await Utils.DoHttpRequestAsync(String.Format("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset={0}&count=30&post-check-sum=31af753555&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=", serverList.Count));
+            string json = await Utils.DoHttpRequestAsync(String.Format("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset={0}&count=30&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=", serverList.Count));
             ServerListResponse resp = await Utils.DeserializeResponse2Async<ServerListResponse>(json);
             foreach (var i in resp.data)
             {
@@ -175,7 +176,7 @@ namespace BattleLauncher
                 string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                dataGridView1.Rows.Add(serverList.Count - 1, i.map, i.name, i.guid, playerCountString, '-');
+                dataGridView1.Rows.Add(serverList.Count - 1, Utils.GetMapName(i.map), i.name, i.guid, playerCountString, '-');
                 UpdatePing(serverList.Count - 1);
             }
         }
@@ -190,7 +191,7 @@ namespace BattleLauncher
             serverList[serverIndex].map = updatedInfo.map;
             serverList[serverIndex].slots = updatedInfo.slots;
             int rowIndex = ServerIndex2Row(serverIndex);
-            dataGridView1.Rows[rowIndex].Cells["Map"].Value = updatedInfo.map;
+            dataGridView1.Rows[rowIndex].Cells["Map"].Value = Utils.GetMapName(updatedInfo.map);
             dataGridView1.Rows[rowIndex].Cells["Players"].Value = playerCountString;
         }
 
@@ -212,6 +213,7 @@ namespace BattleLauncher
             Globals.BF3GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 3", "Install Dir", null);
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
             Globals.SessionToken = "03e73a9a56d830856333ebe9b6a24a72";
+            dataGridView1.DoubleBuffered(true);
             serverList = new List<ServerInfo>();
             GetServerList();
         }
@@ -244,6 +246,16 @@ namespace BattleLauncher
             int serverIndex = (int)dataGridView1.SelectedRows[0].Cells["Index"].Value;
             UpdateServerInfo(serverIndex);
             UpdatePing(serverIndex);
+        }
+    }
+
+    public static class ExtensionMethods
+    {
+        public static void DoubleBuffered(this DataGridView dgv, bool setting)
+        {
+            Type dgvType = dgv.GetType();
+            PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
+            pi.SetValue(dgv, setting, null);
         }
     }
 }
