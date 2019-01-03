@@ -176,7 +176,7 @@ namespace BattleLauncher
                 string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                dataGridView1.Rows.Add(serverList.Count - 1, Utils.GetMapName(i.map), i.name, i.guid, playerCountString, '-');
+                dataGridView1.Rows.Add(serverList.Count - 1, Utils.GetMapName(i.map), i.name, Utils.GetGameModeName(i.mapMode), playerCountString, '-');
                 UpdatePing(serverList.Count - 1);
             }
         }
@@ -193,6 +193,7 @@ namespace BattleLauncher
             int rowIndex = ServerIndex2Row(serverIndex);
             dataGridView1.Rows[rowIndex].Cells["Map"].Value = Utils.GetMapName(updatedInfo.map);
             dataGridView1.Rows[rowIndex].Cells["Players"].Value = playerCountString;
+            dataGridView1.Rows[rowIndex].Cells["Gamemode"].Value = Utils.GetGameModeName(updatedInfo.mapMode);
         }
 
         private async void UpdatePing(int serverIndex)

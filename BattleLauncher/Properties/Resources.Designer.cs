@@ -59,5 +59,401 @@ namespace BattleLauncher.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Conquest.
+        /// </summary>
+        internal static string GM1 {
+            get {
+                return ResourceManager.GetString("GM1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Domination.
+        /// </summary>
+        internal static string GM1024 {
+            get {
+                return ResourceManager.GetString("GM1024", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Conquest Assault Large.
+        /// </summary>
+        internal static string GM128 {
+            get {
+                return ResourceManager.GetString("GM128", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Tank Superiority.
+        /// </summary>
+        internal static string GM131072 {
+            get {
+                return ResourceManager.GetString("GM131072", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Rush.
+        /// </summary>
+        internal static string GM2 {
+            get {
+                return ResourceManager.GetString("GM2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Team DM Close Quarters.
+        /// </summary>
+        internal static string GM2048 {
+            get {
+                return ResourceManager.GetString("GM2048", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Conquest Assault.
+        /// </summary>
+        internal static string GM256 {
+            get {
+                return ResourceManager.GetString("GM256", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Team DM.
+        /// </summary>
+        internal static string GM32 {
+            get {
+                return ResourceManager.GetString("GM32", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Squad Rush.
+        /// </summary>
+        internal static string GM4 {
+            get {
+                return ResourceManager.GetString("GM4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scavenger.
+        /// </summary>
+        internal static string GM4194304 {
+            get {
+                return ResourceManager.GetString("GM4194304", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Gun Master.
+        /// </summary>
+        internal static string GM512 {
+            get {
+                return ResourceManager.GetString("GM512", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Capture the Flag.
+        /// </summary>
+        internal static string GM524288 {
+            get {
+                return ResourceManager.GetString("GM524288", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Conquest Large.
+        /// </summary>
+        internal static string GM64 {
+            get {
+                return ResourceManager.GetString("GM64", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Squad DM.
+        /// </summary>
+        internal static string GM8 {
+            get {
+                return ResourceManager.GetString("GM8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Air Superiority.
+        /// </summary>
+        internal static string GM8388608 {
+            get {
+                return ResourceManager.GetString("GM8388608", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Grand Bazaar.
+        /// </summary>
+        internal static string MP_001 {
+            get {
+                return ResourceManager.GetString("MP_001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Tehran Highway.
+        /// </summary>
+        internal static string MP_003 {
+            get {
+                return ResourceManager.GetString("MP_003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Caspian Border.
+        /// </summary>
+        internal static string MP_007 {
+            get {
+                return ResourceManager.GetString("MP_007", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Seine Crossing.
+        /// </summary>
+        internal static string MP_011 {
+            get {
+                return ResourceManager.GetString("MP_011", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Operation Firestorm.
+        /// </summary>
+        internal static string MP_012 {
+            get {
+                return ResourceManager.GetString("MP_012", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Damavand Peak.
+        /// </summary>
+        internal static string MP_013 {
+            get {
+                return ResourceManager.GetString("MP_013", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Noshahr Canals.
+        /// </summary>
+        internal static string MP_017 {
+            get {
+                return ResourceManager.GetString("MP_017", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Kharg Island.
+        /// </summary>
+        internal static string MP_018 {
+            get {
+                return ResourceManager.GetString("MP_018", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Operation Metro.
+        /// </summary>
+        internal static string MP_Subway {
+            get {
+                return ResourceManager.GetString("MP_Subway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Strike at Karkand.
+        /// </summary>
+        internal static string XP1_001 {
+            get {
+                return ResourceManager.GetString("XP1_001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Gulf of Oman.
+        /// </summary>
+        internal static string XP1_002 {
+            get {
+                return ResourceManager.GetString("XP1_002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sharqi Peninsula.
+        /// </summary>
+        internal static string XP1_003 {
+            get {
+                return ResourceManager.GetString("XP1_003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Wake Island.
+        /// </summary>
+        internal static string XP1_004 {
+            get {
+                return ResourceManager.GetString("XP1_004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Scrapmetal.
+        /// </summary>
+        internal static string XP2_Factory {
+            get {
+                return ResourceManager.GetString("XP2_Factory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Operation 925.
+        /// </summary>
+        internal static string XP2_Office {
+            get {
+                return ResourceManager.GetString("XP2_Office", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Donya Fortress.
+        /// </summary>
+        internal static string XP2_Palace {
+            get {
+                return ResourceManager.GetString("XP2_Palace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ziba Tower.
+        /// </summary>
+        internal static string XP2_Skybar {
+            get {
+                return ResourceManager.GetString("XP2_Skybar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Alborz Mountains.
+        /// </summary>
+        internal static string XP3_Alborz {
+            get {
+                return ResourceManager.GetString("XP3_Alborz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Bandar Desert.
+        /// </summary>
+        internal static string XP3_Desert {
+            get {
+                return ResourceManager.GetString("XP3_Desert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Armored Shield.
+        /// </summary>
+        internal static string XP3_Shield {
+            get {
+                return ResourceManager.GetString("XP3_Shield", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Death Valley.
+        /// </summary>
+        internal static string XP3_Valley {
+            get {
+                return ResourceManager.GetString("XP3_Valley", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Markaz Monolith.
+        /// </summary>
+        internal static string XP4_FD {
+            get {
+                return ResourceManager.GetString("XP4_FD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Azadi Palace.
+        /// </summary>
+        internal static string XP4_Parl {
+            get {
+                return ResourceManager.GetString("XP4_Parl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Epicenter.
+        /// </summary>
+        internal static string XP4_Quake {
+            get {
+                return ResourceManager.GetString("XP4_Quake", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Talah Market.
+        /// </summary>
+        internal static string XP4_Rubble {
+            get {
+                return ResourceManager.GetString("XP4_Rubble", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Operation Riverside.
+        /// </summary>
+        internal static string XP5_001 {
+            get {
+                return ResourceManager.GetString("XP5_001", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Nebandan Flats.
+        /// </summary>
+        internal static string XP5_002 {
+            get {
+                return ResourceManager.GetString("XP5_002", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Kiasar Railroad.
+        /// </summary>
+        internal static string XP5_003 {
+            get {
+                return ResourceManager.GetString("XP5_003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Sabalan Pipeline.
+        /// </summary>
+        internal static string XP5_004 {
+            get {
+                return ResourceManager.GetString("XP5_004", resourceCulture);
+            }
+        }
     }
 }

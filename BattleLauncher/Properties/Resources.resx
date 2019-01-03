@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,141 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="GM1" xml:space="preserve">
+    <value>Conquest</value>
+  </data>
+  <data name="GM1024" xml:space="preserve">
+    <value>Domination</value>
+  </data>
+  <data name="GM128" xml:space="preserve">
+    <value>Conquest Assault Large</value>
+  </data>
+  <data name="GM131072" xml:space="preserve">
+    <value>Tank Superiority</value>
+  </data>
+  <data name="GM2" xml:space="preserve">
+    <value>Rush</value>
+  </data>
+  <data name="GM2048" xml:space="preserve">
+    <value>Team DM Close Quarters</value>
+  </data>
+  <data name="GM256" xml:space="preserve">
+    <value>Conquest Assault</value>
+  </data>
+  <data name="GM32" xml:space="preserve">
+    <value>Team DM</value>
+  </data>
+  <data name="GM4" xml:space="preserve">
+    <value>Squad Rush</value>
+  </data>
+  <data name="GM4194304" xml:space="preserve">
+    <value>Scavenger</value>
+  </data>
+  <data name="GM512" xml:space="preserve">
+    <value>Gun Master</value>
+  </data>
+  <data name="GM524288" xml:space="preserve">
+    <value>Capture the Flag</value>
+  </data>
+  <data name="GM64" xml:space="preserve">
+    <value>Conquest Large</value>
+  </data>
+  <data name="GM8" xml:space="preserve">
+    <value>Squad DM</value>
+  </data>
+  <data name="GM8388608" xml:space="preserve">
+    <value>Air Superiority</value>
+  </data>
+  <data name="MP_001" xml:space="preserve">
+    <value>Grand Bazaar</value>
+  </data>
+  <data name="MP_003" xml:space="preserve">
+    <value>Tehran Highway</value>
+  </data>
+  <data name="MP_007" xml:space="preserve">
+    <value>Caspian Border</value>
+  </data>
+  <data name="MP_011" xml:space="preserve">
+    <value>Seine Crossing</value>
+  </data>
+  <data name="MP_012" xml:space="preserve">
+    <value>Operation Firestorm</value>
+  </data>
+  <data name="MP_013" xml:space="preserve">
+    <value>Damavand Peak</value>
+  </data>
+  <data name="MP_017" xml:space="preserve">
+    <value>Noshahr Canals</value>
+  </data>
+  <data name="MP_018" xml:space="preserve">
+    <value>Kharg Island</value>
+  </data>
+  <data name="MP_Subway" xml:space="preserve">
+    <value>Operation Metro</value>
+  </data>
+  <data name="XP1_001" xml:space="preserve">
+    <value>Strike at Karkand</value>
+  </data>
+  <data name="XP1_002" xml:space="preserve">
+    <value>Gulf of Oman</value>
+  </data>
+  <data name="XP1_003" xml:space="preserve">
+    <value>Sharqi Peninsula</value>
+  </data>
+  <data name="XP1_004" xml:space="preserve">
+    <value>Wake Island</value>
+  </data>
+  <data name="XP2_Factory" xml:space="preserve">
+    <value>Scrapmetal</value>
+  </data>
+  <data name="XP2_Office" xml:space="preserve">
+    <value>Operation 925</value>
+  </data>
+  <data name="XP2_Palace" xml:space="preserve">
+    <value>Donya Fortress</value>
+  </data>
+  <data name="XP2_Skybar" xml:space="preserve">
+    <value>Ziba Tower</value>
+  </data>
+  <data name="XP3_Alborz" xml:space="preserve">
+    <value>Alborz Mountains</value>
+  </data>
+  <data name="XP3_Desert" xml:space="preserve">
+    <value>Bandar Desert</value>
+  </data>
+  <data name="XP3_Shield" xml:space="preserve">
+    <value>Armored Shield</value>
+  </data>
+  <data name="XP3_Valley" xml:space="preserve">
+    <value>Death Valley</value>
+  </data>
+  <data name="XP4_FD" xml:space="preserve">
+    <value>Markaz Monolith</value>
+  </data>
+  <data name="XP4_Parl" xml:space="preserve">
+    <value>Azadi Palace</value>
+  </data>
+  <data name="XP4_Quake" xml:space="preserve">
+    <value>Epicenter</value>
+  </data>
+  <data name="XP4_Rubble" xml:space="preserve">
+    <value>Talah Market</value>
+  </data>
+  <data name="XP5_001" xml:space="preserve">
+    <value>Operation Riverside</value>
+  </data>
+  <data name="XP5_002" xml:space="preserve">
+    <value>Nebandan Flats</value>
+  </data>
+  <data name="XP5_003" xml:space="preserve">
+    <value>Kiasar Railroad</value>
+  </data>
+  <data name="XP5_004" xml:space="preserve">
+    <value>Sabalan Pipeline</value>
+  </data>
 </root>

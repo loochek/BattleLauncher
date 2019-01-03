@@ -61,65 +61,104 @@ namespace BattleLauncher
             switch (id)
             {
                 case "MP_001":
-                    return "Grand Bazaar";
+                    return Properties.Resources.MP_001;
                 case "MP_003":
-                    return "Tehran Highway";
+                    return Properties.Resources.MP_003;
                 case "MP_007":
-                    return "Caspian Border";
+                    return Properties.Resources.MP_007;
                 case "MP_011":
-                    return "Seine Crossing";
+                    return Properties.Resources.MP_011;
                 case "MP_012":
-                    return "Operation Firestorm";
+                    return Properties.Resources.MP_012;
                 case "MP_013":
-                    return "Damavand Peak";
+                    return Properties.Resources.MP_013;
                 case "MP_017":
-                    return "Noshahr Canals";
+                    return Properties.Resources.MP_017;
                 case "MP_018":
-                    return "Kharg Island";
+                    return Properties.Resources.MP_018;
                 case "MP_Subway":
-                    return "Operation Metro";
+                    return Properties.Resources.MP_Subway;
                 case "XP1_001":
-                    return "Strike at Karkand";
+                    return Properties.Resources.XP1_001;
                 case "XP1_002":
-                    return "Gulf of Oman";
+                    return Properties.Resources.XP1_002;
                 case "XP1_003":
-                    return "Sharqi Peninsula";
+                    return Properties.Resources.XP1_003;
                 case "XP1_004":
-                    return "Wake Island";
+                    return Properties.Resources.XP1_004;
                 case "XP2_Factory":
-                    return "Scrapmetal";
+                    return Properties.Resources.XP2_Factory;
                 case "XP2_Office":
-                    return "Operation 925";
+                    return Properties.Resources.XP2_Office;
                 case "XP2_Palace":
-                    return "Donya Fortress";
+                    return Properties.Resources.XP2_Palace;
                 case "XP2_Skybar":
-                    return "Ziba Tower";
+                    return Properties.Resources.XP2_Skybar;
                 case "XP3_Alborz":
-                    return "Alborz Mountains";
+                    return Properties.Resources.XP3_Alborz;
                 case "XP3_Desert":
-                    return "Bandar Desert";
+                    return Properties.Resources.XP3_Desert;
                 case "XP3_Shield":
-                    return "Armored Shield";
+                    return Properties.Resources.XP3_Shield;
                 case "XP3_Valley":
-                    return "Death Valley";
+                    return Properties.Resources.XP3_Valley;
                 case "XP4_FD":
-                    return "Markaz Monolith";
+                    return Properties.Resources.XP4_FD;
                 case "XP4_Parl":
-                    return "Azadi Palace";
+                    return Properties.Resources.XP4_Parl;
                 case "XP4_Quake":
-                    return "Epicenter";
+                    return Properties.Resources.XP4_Quake;
                 case "XP4_Rubble":
-                    return "Talah Market";
+                    return Properties.Resources.XP4_Rubble;
                 case "XP5_001":
-                    return "Operation Riverside";
+                    return Properties.Resources.XP5_001;
                 case "XP5_002":
-                    return "Nebandan Flats";
+                    return Properties.Resources.XP5_002;
                 case "XP5_003":
-                    return "Kiasar Railroad";
+                    return Properties.Resources.XP5_003;
                 case "XP5_004":
-                    return "Sabalan Pipeline";
+                    return Properties.Resources.XP5_004;
                 default:
                     return "Unknown map ID";
+            }
+        }
+
+        public static string GetGameModeName(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    return Properties.Resources.GM1;
+                case 2:
+                    return Properties.Resources.GM2;
+                case 4:
+                    return Properties.Resources.GM4;
+                case 8:
+                    return Properties.Resources.GM8;
+                case 32:
+                    return Properties.Resources.GM32;
+                case 64:
+                    return Properties.Resources.GM64;
+                case 128:
+                    return Properties.Resources.GM128;
+                case 256:
+                    return Properties.Resources.GM256;
+                case 512:
+                    return Properties.Resources.GM512;
+                case 1024:
+                    return Properties.Resources.GM1024;
+                case 2048:
+                    return Properties.Resources.GM2048;
+                case 131072:
+                    return Properties.Resources.GM131072;
+                case 524288:
+                    return Properties.Resources.GM524288;
+                case 4194304:
+                    return Properties.Resources.GM4194304;
+                case 8388608:
+                    return Properties.Resources.GM8388608;
+                default:
+                    return "Unknown game mode ID";
             }
         }
     }
@@ -174,11 +213,12 @@ namespace BattleLauncher
             public int region;
             public bool fairfight;
             public int tickRate;
-            public bool HasPassword;
+            public bool hasPassword;
             public string country;
             public string name;
             public SlotsInfo slots;
             public int ping;
+            public int mapMode;
         }
 
         public class ReservationInfo
