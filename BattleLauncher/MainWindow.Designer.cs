@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.serverBrowserView = new System.Windows.Forms.DataGridView();
             this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.map = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -41,48 +41,66 @@
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.FilterGameBF3 = new System.Windows.Forms.CheckBox();
-            this.FilterGameB2K = new System.Windows.Forms.CheckBox();
-            this.FilterGameCQ = new System.Windows.Forms.CheckBox();
-            this.FilterGameAK = new System.Windows.Forms.CheckBox();
-            this.FilterGameAM = new System.Windows.Forms.CheckBox();
+            this.FilterGame = new System.Windows.Forms.GroupBox();
+            this.FilterGM = new System.Windows.Forms.GroupBox();
+            this.FilterGM131072 = new System.Windows.Forms.CheckBox();
+            this.FilterGM256 = new System.Windows.Forms.CheckBox();
+            this.FilterGM2 = new System.Windows.Forms.CheckBox();
+            this.FilterGM8 = new System.Windows.Forms.CheckBox();
+            this.FilterGM128 = new System.Windows.Forms.CheckBox();
+            this.FilterGM64 = new System.Windows.Forms.CheckBox();
+            this.FilterGM8388608 = new System.Windows.Forms.CheckBox();
+            this.FilterGM1024 = new System.Windows.Forms.CheckBox();
+            this.FilterGM4194304 = new System.Windows.Forms.CheckBox();
+            this.FilterGM2048 = new System.Windows.Forms.CheckBox();
+            this.FilterGM32 = new System.Windows.Forms.CheckBox();
+            this.FilterGM524288 = new System.Windows.Forms.CheckBox();
+            this.FilterGM512 = new System.Windows.Forms.CheckBox();
+            this.FilterGM4 = new System.Windows.Forms.CheckBox();
+            this.FilterGM1 = new System.Windows.Forms.CheckBox();
             this.FilterGameEG = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.FilterGameAM = new System.Windows.Forms.CheckBox();
+            this.FilterGameAK = new System.Windows.Forms.CheckBox();
+            this.FilterGameCQ = new System.Windows.Forms.CheckBox();
+            this.FilterGameB2K = new System.Windows.Forms.CheckBox();
+            this.FilterGameBF3 = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.serverBrowserView)).BeginInit();
             this.statusBar.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.FilterGame.SuspendLayout();
+            this.FilterGM.SuspendLayout();
             this.SuspendLayout();
             // 
-            // dataGridView1
+            // serverBrowserView
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
-            this.dataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.serverBrowserView.AllowUserToAddRows = false;
+            this.serverBrowserView.AllowUserToDeleteRows = false;
+            this.serverBrowserView.AllowUserToResizeRows = false;
+            this.serverBrowserView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.serverBrowserView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.serverBrowserView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.serverBrowserView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Index,
             this.map,
             this.name,
             this.Gamemode,
             this.Players,
             this.ping});
-            this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView1.Location = new System.Drawing.Point(320, 12);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(606, 432);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView1_CellMouseDoubleClick);
-            this.dataGridView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView1_Scroll);
-            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            this.serverBrowserView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.serverBrowserView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.serverBrowserView.Location = new System.Drawing.Point(320, 12);
+            this.serverBrowserView.MultiSelect = false;
+            this.serverBrowserView.Name = "serverBrowserView";
+            this.serverBrowserView.ReadOnly = true;
+            this.serverBrowserView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.serverBrowserView.RowHeadersVisible = false;
+            this.serverBrowserView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.serverBrowserView.Size = new System.Drawing.Size(437, 432);
+            this.serverBrowserView.TabIndex = 0;
+            this.serverBrowserView.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.serverBrowserView_CellMouseDoubleClick);
+            this.serverBrowserView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.serverBrowserView_Scroll);
+            this.serverBrowserView.SelectionChanged += new System.EventHandler(this.serverBrowserView_SelectionChanged);
             // 
             // Index
             // 
@@ -161,79 +179,190 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Location = new System.Drawing.Point(932, 12);
+            this.groupBox1.Controls.Add(this.FilterGM);
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.FilterGame);
+            this.groupBox1.Location = new System.Drawing.Point(813, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(282, 432);
+            this.groupBox1.Size = new System.Drawing.Size(401, 510);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filter";
             // 
-            // groupBox2
+            // FilterGame
             // 
-            this.groupBox2.AutoSize = true;
-            this.groupBox2.Controls.Add(this.FilterGameEG);
-            this.groupBox2.Controls.Add(this.FilterGameAM);
-            this.groupBox2.Controls.Add(this.FilterGameAK);
-            this.groupBox2.Controls.Add(this.FilterGameCQ);
-            this.groupBox2.Controls.Add(this.FilterGameB2K);
-            this.groupBox2.Controls.Add(this.FilterGameBF3);
-            this.groupBox2.Location = new System.Drawing.Point(6, 19);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(118, 170);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Game";
+            this.FilterGame.AutoSize = true;
+            this.FilterGame.Controls.Add(this.FilterGameEG);
+            this.FilterGame.Controls.Add(this.FilterGameAM);
+            this.FilterGame.Controls.Add(this.FilterGameAK);
+            this.FilterGame.Controls.Add(this.FilterGameCQ);
+            this.FilterGame.Controls.Add(this.FilterGameB2K);
+            this.FilterGame.Controls.Add(this.FilterGameBF3);
+            this.FilterGame.Location = new System.Drawing.Point(6, 19);
+            this.FilterGame.Name = "FilterGame";
+            this.FilterGame.Size = new System.Drawing.Size(118, 170);
+            this.FilterGame.TabIndex = 0;
+            this.FilterGame.TabStop = false;
+            this.FilterGame.Text = "Game";
             // 
-            // FilterGameBF3
+            // FilterGM
             // 
-            this.FilterGameBF3.AutoSize = true;
-            this.FilterGameBF3.Location = new System.Drawing.Point(6, 19);
-            this.FilterGameBF3.Name = "FilterGameBF3";
-            this.FilterGameBF3.Size = new System.Drawing.Size(81, 17);
-            this.FilterGameBF3.TabIndex = 0;
-            this.FilterGameBF3.Text = "Battlefield 3";
-            this.FilterGameBF3.UseVisualStyleBackColor = true;
+            this.FilterGM.Controls.Add(this.FilterGM131072);
+            this.FilterGM.Controls.Add(this.FilterGM256);
+            this.FilterGM.Controls.Add(this.FilterGM2);
+            this.FilterGM.Controls.Add(this.FilterGM2048);
+            this.FilterGM.Controls.Add(this.FilterGM8);
+            this.FilterGM.Controls.Add(this.FilterGM128);
+            this.FilterGM.Controls.Add(this.FilterGM64);
+            this.FilterGM.Controls.Add(this.FilterGM8388608);
+            this.FilterGM.Controls.Add(this.FilterGM1024);
+            this.FilterGM.Controls.Add(this.FilterGM4194304);
+            this.FilterGM.Controls.Add(this.FilterGM32);
+            this.FilterGM.Controls.Add(this.FilterGM524288);
+            this.FilterGM.Controls.Add(this.FilterGM512);
+            this.FilterGM.Controls.Add(this.FilterGM4);
+            this.FilterGM.Controls.Add(this.FilterGM1);
+            this.FilterGM.Location = new System.Drawing.Point(6, 195);
+            this.FilterGM.Name = "FilterGM";
+            this.FilterGM.Size = new System.Drawing.Size(162, 328);
+            this.FilterGM.TabIndex = 1;
+            this.FilterGM.TabStop = false;
+            this.FilterGM.Text = "Game mode";
             // 
-            // FilterGameB2K
+            // FilterGM131072
             // 
-            this.FilterGameB2K.AutoSize = true;
-            this.FilterGameB2K.Location = new System.Drawing.Point(6, 42);
-            this.FilterGameB2K.Name = "FilterGameB2K";
-            this.FilterGameB2K.Size = new System.Drawing.Size(106, 17);
-            this.FilterGameB2K.TabIndex = 1;
-            this.FilterGameB2K.Text = "Back to Karkand";
-            this.FilterGameB2K.UseVisualStyleBackColor = true;
+            this.FilterGM131072.AutoSize = true;
+            this.FilterGM131072.Location = new System.Drawing.Point(6, 239);
+            this.FilterGM131072.Name = "FilterGM131072";
+            this.FilterGM131072.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM131072.TabIndex = 15;
+            this.FilterGM131072.UseVisualStyleBackColor = true;
             // 
-            // FilterGameCQ
+            // FilterGM256
             // 
-            this.FilterGameCQ.AutoSize = true;
-            this.FilterGameCQ.Location = new System.Drawing.Point(6, 65);
-            this.FilterGameCQ.Name = "FilterGameCQ";
-            this.FilterGameCQ.Size = new System.Drawing.Size(95, 17);
-            this.FilterGameCQ.TabIndex = 2;
-            this.FilterGameCQ.Text = "Close Quarters";
-            this.FilterGameCQ.UseVisualStyleBackColor = true;
+            this.FilterGM256.AutoSize = true;
+            this.FilterGM256.Location = new System.Drawing.Point(6, 159);
+            this.FilterGM256.Name = "FilterGM256";
+            this.FilterGM256.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM256.TabIndex = 14;
+            this.FilterGM256.UseVisualStyleBackColor = true;
             // 
-            // FilterGameAK
+            // FilterGM2
             // 
-            this.FilterGameAK.AutoSize = true;
-            this.FilterGameAK.Location = new System.Drawing.Point(6, 88);
-            this.FilterGameAK.Name = "FilterGameAK";
-            this.FilterGameAK.Size = new System.Drawing.Size(81, 17);
-            this.FilterGameAK.TabIndex = 3;
-            this.FilterGameAK.Text = "Armored Kill";
-            this.FilterGameAK.UseVisualStyleBackColor = true;
+            this.FilterGM2.AutoSize = true;
+            this.FilterGM2.Location = new System.Drawing.Point(6, 39);
+            this.FilterGM2.Name = "FilterGM2";
+            this.FilterGM2.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM2.TabIndex = 13;
+            this.FilterGM2.UseVisualStyleBackColor = true;
             // 
-            // FilterGameAM
+            // FilterGM8
             // 
-            this.FilterGameAM.AutoSize = true;
-            this.FilterGameAM.Location = new System.Drawing.Point(6, 111);
-            this.FilterGameAM.Name = "FilterGameAM";
-            this.FilterGameAM.Size = new System.Drawing.Size(71, 17);
-            this.FilterGameAM.TabIndex = 4;
-            this.FilterGameAM.Text = "Aftermath";
-            this.FilterGameAM.UseVisualStyleBackColor = true;
+            this.FilterGM8.AutoSize = true;
+            this.FilterGM8.Location = new System.Drawing.Point(6, 79);
+            this.FilterGM8.Name = "FilterGM8";
+            this.FilterGM8.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM8.TabIndex = 12;
+            this.FilterGM8.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM128
+            // 
+            this.FilterGM128.AutoSize = true;
+            this.FilterGM128.Location = new System.Drawing.Point(6, 139);
+            this.FilterGM128.Name = "FilterGM128";
+            this.FilterGM128.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM128.TabIndex = 11;
+            this.FilterGM128.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM64
+            // 
+            this.FilterGM64.AutoSize = true;
+            this.FilterGM64.Location = new System.Drawing.Point(6, 119);
+            this.FilterGM64.Name = "FilterGM64";
+            this.FilterGM64.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM64.TabIndex = 10;
+            this.FilterGM64.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM8388608
+            // 
+            this.FilterGM8388608.AutoSize = true;
+            this.FilterGM8388608.Location = new System.Drawing.Point(6, 299);
+            this.FilterGM8388608.Name = "FilterGM8388608";
+            this.FilterGM8388608.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM8388608.TabIndex = 9;
+            this.FilterGM8388608.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM1024
+            // 
+            this.FilterGM1024.AutoSize = true;
+            this.FilterGM1024.Location = new System.Drawing.Point(6, 199);
+            this.FilterGM1024.Name = "FilterGM1024";
+            this.FilterGM1024.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM1024.TabIndex = 5;
+            this.FilterGM1024.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM4194304
+            // 
+            this.FilterGM4194304.AutoSize = true;
+            this.FilterGM4194304.Location = new System.Drawing.Point(6, 279);
+            this.FilterGM4194304.Name = "FilterGM4194304";
+            this.FilterGM4194304.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM4194304.TabIndex = 8;
+            this.FilterGM4194304.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM2048
+            // 
+            this.FilterGM2048.AutoSize = true;
+            this.FilterGM2048.Location = new System.Drawing.Point(6, 219);
+            this.FilterGM2048.Name = "FilterGM2048";
+            this.FilterGM2048.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM2048.TabIndex = 7;
+            this.FilterGM2048.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM32
+            // 
+            this.FilterGM32.AutoSize = true;
+            this.FilterGM32.Location = new System.Drawing.Point(6, 99);
+            this.FilterGM32.Name = "FilterGM32";
+            this.FilterGM32.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM32.TabIndex = 6;
+            this.FilterGM32.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM524288
+            // 
+            this.FilterGM524288.AutoSize = true;
+            this.FilterGM524288.Location = new System.Drawing.Point(6, 259);
+            this.FilterGM524288.Name = "FilterGM524288";
+            this.FilterGM524288.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM524288.TabIndex = 4;
+            this.FilterGM524288.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM512
+            // 
+            this.FilterGM512.AutoSize = true;
+            this.FilterGM512.Location = new System.Drawing.Point(6, 179);
+            this.FilterGM512.Name = "FilterGM512";
+            this.FilterGM512.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM512.TabIndex = 3;
+            this.FilterGM512.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM4
+            // 
+            this.FilterGM4.AutoSize = true;
+            this.FilterGM4.Location = new System.Drawing.Point(6, 59);
+            this.FilterGM4.Name = "FilterGM4";
+            this.FilterGM4.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM4.TabIndex = 2;
+            this.FilterGM4.UseVisualStyleBackColor = true;
+            // 
+            // FilterGM1
+            // 
+            this.FilterGM1.AutoSize = true;
+            this.FilterGM1.Location = new System.Drawing.Point(6, 19);
+            this.FilterGM1.Name = "FilterGM1";
+            this.FilterGM1.Size = new System.Drawing.Size(15, 14);
+            this.FilterGM1.TabIndex = 1;
+            this.FilterGM1.UseVisualStyleBackColor = true;
             // 
             // FilterGameEG
             // 
@@ -245,6 +374,66 @@
             this.FilterGameEG.Text = "End Game";
             this.FilterGameEG.UseVisualStyleBackColor = true;
             // 
+            // FilterGameAM
+            // 
+            this.FilterGameAM.AutoSize = true;
+            this.FilterGameAM.Location = new System.Drawing.Point(6, 111);
+            this.FilterGameAM.Name = "FilterGameAM";
+            this.FilterGameAM.Size = new System.Drawing.Size(71, 17);
+            this.FilterGameAM.TabIndex = 4;
+            this.FilterGameAM.Text = "Aftermath";
+            this.FilterGameAM.UseVisualStyleBackColor = true;
+            // 
+            // FilterGameAK
+            // 
+            this.FilterGameAK.AutoSize = true;
+            this.FilterGameAK.Location = new System.Drawing.Point(6, 88);
+            this.FilterGameAK.Name = "FilterGameAK";
+            this.FilterGameAK.Size = new System.Drawing.Size(81, 17);
+            this.FilterGameAK.TabIndex = 3;
+            this.FilterGameAK.Text = "Armored Kill";
+            this.FilterGameAK.UseVisualStyleBackColor = true;
+            // 
+            // FilterGameCQ
+            // 
+            this.FilterGameCQ.AutoSize = true;
+            this.FilterGameCQ.Location = new System.Drawing.Point(6, 65);
+            this.FilterGameCQ.Name = "FilterGameCQ";
+            this.FilterGameCQ.Size = new System.Drawing.Size(95, 17);
+            this.FilterGameCQ.TabIndex = 2;
+            this.FilterGameCQ.Text = "Close Quarters";
+            this.FilterGameCQ.UseVisualStyleBackColor = true;
+            // 
+            // FilterGameB2K
+            // 
+            this.FilterGameB2K.AutoSize = true;
+            this.FilterGameB2K.Location = new System.Drawing.Point(6, 42);
+            this.FilterGameB2K.Name = "FilterGameB2K";
+            this.FilterGameB2K.Size = new System.Drawing.Size(106, 17);
+            this.FilterGameB2K.TabIndex = 1;
+            this.FilterGameB2K.Text = "Back to Karkand";
+            this.FilterGameB2K.UseVisualStyleBackColor = true;
+            // 
+            // FilterGameBF3
+            // 
+            this.FilterGameBF3.AutoSize = true;
+            this.FilterGameBF3.Location = new System.Drawing.Point(6, 19);
+            this.FilterGameBF3.Name = "FilterGameBF3";
+            this.FilterGameBF3.Size = new System.Drawing.Size(81, 17);
+            this.FilterGameBF3.TabIndex = 0;
+            this.FilterGameBF3.Text = "Battlefield 3";
+            this.FilterGameBF3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(174, 294);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(137, 44);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Apply filter";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,17 +442,19 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.statusBar);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.serverBrowserView);
             this.Name = "MainWindow";
             this.Text = "BattleLauncher";
             this.Load += new System.EventHandler(this.MainWindow_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.serverBrowserView)).EndInit();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.FilterGame.ResumeLayout(false);
+            this.FilterGame.PerformLayout();
+            this.FilterGM.ResumeLayout(false);
+            this.FilterGM.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -271,7 +462,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView serverBrowserView;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
@@ -283,12 +474,29 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Players;
         private System.Windows.Forms.DataGridViewTextBoxColumn ping;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox FilterGame;
         private System.Windows.Forms.CheckBox FilterGameEG;
         private System.Windows.Forms.CheckBox FilterGameAM;
         private System.Windows.Forms.CheckBox FilterGameAK;
         private System.Windows.Forms.CheckBox FilterGameCQ;
         private System.Windows.Forms.CheckBox FilterGameB2K;
         private System.Windows.Forms.CheckBox FilterGameBF3;
+        private System.Windows.Forms.GroupBox FilterGM;
+        private System.Windows.Forms.CheckBox FilterGM131072;
+        private System.Windows.Forms.CheckBox FilterGM256;
+        private System.Windows.Forms.CheckBox FilterGM2;
+        private System.Windows.Forms.CheckBox FilterGM8;
+        private System.Windows.Forms.CheckBox FilterGM128;
+        private System.Windows.Forms.CheckBox FilterGM64;
+        private System.Windows.Forms.CheckBox FilterGM8388608;
+        private System.Windows.Forms.CheckBox FilterGM1024;
+        private System.Windows.Forms.CheckBox FilterGM4194304;
+        private System.Windows.Forms.CheckBox FilterGM2048;
+        private System.Windows.Forms.CheckBox FilterGM32;
+        private System.Windows.Forms.CheckBox FilterGM524288;
+        private System.Windows.Forms.CheckBox FilterGM512;
+        private System.Windows.Forms.CheckBox FilterGM4;
+        private System.Windows.Forms.CheckBox FilterGM1;
+        private System.Windows.Forms.Button button1;
     }
 }

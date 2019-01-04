@@ -49,6 +49,7 @@
     public static class URL
     {
         public const string Battlelog = "http://battlelog.battlefield.com";
+        public const string BF3SearchServers = "http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?";
         public const string BF3ServerInfoShort = "http://battlelog.battlefield.com/bf3/servers/show/pc/{0}/?json=1&join=true";
         public const string BF3PlayablePersona = "https://battlelog.battlefield.com/bf3/launcher/playablepersona/";
         public const string BF3ReserveSlot = "http://battlelog.battlefield.com/bf3/launcher/reserveslotbygameid/1/{0}/{1}/1/{2}/0";

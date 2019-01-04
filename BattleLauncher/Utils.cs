@@ -161,10 +161,52 @@ namespace BattleLauncher
                     return "Unknown game mode ID";
             }
         }
+
+        public static string SerializeFilter(Battlelog.SearchFilter filter)
+        {
+            string query = "";
+            foreach (int i in filter.gameexpansions)
+                query += "&gameexpansions=" + i;
+            foreach (int i in filter.gamemodes)
+                query += "&gamemodes=" + Convert.ToString(i);
+            foreach (int i in filter.gamepresets)
+                query += "&gamepresets=" + Convert.ToString(i);
+            foreach (int i in filter.gameSize)
+                query += "&gameSize=" + Convert.ToString(i);
+            query += "&filtered=" + filter.filtered;
+            query += "&expand=" + filter.expand;
+            query += "&offset=" + filter.offset;
+            query += "&count=" + filter.count;
+            query += "&q=" + filter.q;
+            query += "&premium=" + filter.premium;
+            query += "&ranked=" + filter.ranked;
+            query += "&mapRotation" + filter.mapRotation;
+            query += "&modeRotation" + filter.modeRotation;
+            query += "&password=" + filter.password;
+            return query;
+        }
     }
 
     namespace Battlelog
     {
+
+        public class SearchFilter
+        {
+            public int offset = 0;
+            public int count = 30;
+            public int filtered = 1;
+            public int expand = 1;
+            public string q = "";
+            public List<int> gamepresets = new List<int>();
+            public List<int> gamemodes = new List<int>();
+            public List<int> gameexpansions = new List<int>();
+            public List<int> gameSize = new List<int>();
+            public int premium = -1;
+            public int ranked = -1;
+            public int modeRotation = -1;
+            public int password = -1;
+            public int mapRotation = -1;
+        }
 
         public class BattlelogResponse
         {

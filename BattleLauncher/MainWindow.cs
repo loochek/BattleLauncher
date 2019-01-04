@@ -26,6 +26,8 @@ namespace BattleLauncher
         private bool Cancel = false;
         private bool Busy = false;
 
+        private SearchFilter currentFilter;
+
         private async void RunGame(string ServerGuid)
         {
             Busy = true;
@@ -162,13 +164,14 @@ namespace BattleLauncher
         }
         private int ServerIndex2Row(int serverIndex)
         {
-            DataGridViewRow row = dataGridView1.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Index"].Value.Equals(serverIndex)).First();
+            DataGridViewRow row = serverBrowserView.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["Index"].Value.Equals(serverIndex)).First();
             return row.Index;
         }
 
         private async void GetServerList()
         {
-            string json = await Utils.DoHttpRequestAsync(String.Format("http://battlelog.battlefield.com/bf3/servers/getAutoBrowseServers/?offset={0}&count=30&filtered=1&expand=1&gameexpansions=0&gameexpansions=512&gameexpansions=2048&gameexpansions=4096&gameexpansions=8192&gameexpansions=16384&q=&premium=-1&ranked=-1&mapRotation=-1&modeRotation=-1&password=-1&settings=&regions=&country=", serverList.Count));
+            currentFilter.offset = serverList.Count;
+            string json = await Utils.DoHttpRequestAsync(URL.BF3SearchServers + Utils.SerializeFilter(currentFilter));
             ServerListResponse resp = await Utils.DeserializeResponse2Async<ServerListResponse>(json);
             foreach (var i in resp.data)
             {
@@ -176,7 +179,7 @@ namespace BattleLauncher
                 string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                dataGridView1.Rows.Add(serverList.Count - 1, Utils.GetMapName(i.map), i.name, Utils.GetGameModeName(i.mapMode), playerCountString, '-');
+                serverBrowserView.Rows.Add(serverList.Count - 1, Utils.GetMapName(i.map), i.name, Utils.GetGameModeName(i.mapMode), playerCountString, '-');
                 UpdatePing(serverList.Count - 1);
             }
         }
@@ -191,9 +194,9 @@ namespace BattleLauncher
             serverList[serverIndex].map = updatedInfo.map;
             serverList[serverIndex].slots = updatedInfo.slots;
             int rowIndex = ServerIndex2Row(serverIndex);
-            dataGridView1.Rows[rowIndex].Cells["Map"].Value = Utils.GetMapName(updatedInfo.map);
-            dataGridView1.Rows[rowIndex].Cells["Players"].Value = playerCountString;
-            dataGridView1.Rows[rowIndex].Cells["Gamemode"].Value = Utils.GetGameModeName(updatedInfo.mapMode);
+            serverBrowserView.Rows[rowIndex].Cells["Map"].Value = Utils.GetMapName(updatedInfo.map);
+            serverBrowserView.Rows[rowIndex].Cells["Players"].Value = playerCountString;
+            serverBrowserView.Rows[rowIndex].Cells["Gamemode"].Value = Utils.GetGameModeName(updatedInfo.mapMode);
         }
 
         private async void UpdatePing(int serverIndex)
@@ -206,7 +209,7 @@ namespace BattleLauncher
                 Ping p = new Ping();
                 ping = (int)(await p.SendPingAsync(serverList[serverIndex].ip)).RoundtripTime;
             }
-            dataGridView1.Rows[ServerIndex2Row(serverIndex)].Cells["Ping"].Value = ping;
+            serverBrowserView.Rows[ServerIndex2Row(serverIndex)].Cells["Ping"].Value = ping;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -214,7 +217,23 @@ namespace BattleLauncher
             Globals.BF3GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 3", "Install Dir", null);
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
             Globals.SessionToken = "03e73a9a56d830856333ebe9b6a24a72";
-            dataGridView1.DoubleBuffered(true);
+            this.FilterGM1.Text = Properties.Resources.GM1;
+            this.FilterGM2.Text = Properties.Resources.GM2;
+            this.FilterGM4.Text = Properties.Resources.GM4;
+            this.FilterGM8.Text = Properties.Resources.GM8;
+            this.FilterGM32.Text = Properties.Resources.GM32;
+            this.FilterGM64.Text = Properties.Resources.GM64;
+            this.FilterGM128.Text = Properties.Resources.GM128;
+            this.FilterGM256.Text = Properties.Resources.GM256;
+            this.FilterGM512.Text = Properties.Resources.GM512;
+            this.FilterGM1024.Text = Properties.Resources.GM1024;
+            this.FilterGM2048.Text = Properties.Resources.GM2048;
+            this.FilterGM131072.Text = Properties.Resources.GM131072;
+            this.FilterGM524288.Text = Properties.Resources.GM524288;
+            this.FilterGM4194304.Text = Properties.Resources.GM4194304;
+            this.FilterGM8388608.Text = Properties.Resources.GM8388608;
+            currentFilter = new SearchFilter();
+            serverBrowserView.DoubleBuffered(true);
             serverList = new List<ServerInfo>();
             GetServerList();
         }
@@ -224,29 +243,79 @@ namespace BattleLauncher
             Cancel = true;
         }
 
-        private void DataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void serverBrowserView_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (serverBrowserView.DisplayedRowCount(false) + serverBrowserView.FirstDisplayedScrollingRowIndex >= serverBrowserView.RowCount)
+                GetServerList();
+        }
+
+        private void serverBrowserView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (serverBrowserView.SelectedRows.Count == 0)
+                return;
+            if (serverBrowserView.SelectedRows[0].Index == -1)
+                return;
+            int serverIndex = (int)serverBrowserView.SelectedRows[0].Cells["Index"].Value;
+            UpdateServerInfo(serverIndex);
+            UpdatePing(serverIndex);
+        }
+
+        private void serverBrowserView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
             if (!Busy)
-                RunGame(serverList[(int)dataGridView1.Rows[e.RowIndex].Cells["Index"].Value].guid);
+                RunGame(serverList[(int)serverBrowserView.Rows[e.RowIndex].Cells["Index"].Value].guid);
         }
 
-        private void dataGridView1_Scroll(object sender, ScrollEventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.DisplayedRowCount(false) + dataGridView1.FirstDisplayedScrollingRowIndex >= dataGridView1.RowCount)
-            {
-                GetServerList();
-            }
-        }
-
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows[0].Index == -1)
-                return;
-            int serverIndex = (int)dataGridView1.SelectedRows[0].Cells["Index"].Value;
-            UpdateServerInfo(serverIndex);
-            UpdatePing(serverIndex);
+            currentFilter = new SearchFilter();
+            if (FilterGM1.Checked)
+                currentFilter.gamemodes.Add(1);
+            if (FilterGM2.Checked)
+                currentFilter.gamemodes.Add(2);
+            if (FilterGM4.Checked)
+                currentFilter.gamemodes.Add(4);
+            if (FilterGM8.Checked)
+                currentFilter.gamemodes.Add(8);
+            if (FilterGM32.Checked)
+                currentFilter.gamemodes.Add(32);
+            if (FilterGM64.Checked)
+                currentFilter.gamemodes.Add(64);
+            if (FilterGM128.Checked)
+                currentFilter.gamemodes.Add(128);
+            if (FilterGM256.Checked)
+                currentFilter.gamemodes.Add(256);
+            if (FilterGM512.Checked)
+                currentFilter.gamemodes.Add(512);
+            if (FilterGM1024.Checked)
+                currentFilter.gamemodes.Add(1024);
+            if (FilterGM2048.Checked)
+                currentFilter.gamemodes.Add(2048);
+            if (FilterGM131072.Checked)
+                currentFilter.gamemodes.Add(131072);
+            if (FilterGM524288.Checked)
+                currentFilter.gamemodes.Add(524288);
+            if (FilterGM4194304.Checked)
+                currentFilter.gamemodes.Add(4194304);
+            if (FilterGM8388608.Checked)
+                currentFilter.gamemodes.Add(8388608);
+            if (FilterGameBF3.Checked)
+                currentFilter.gameexpansions.Add(0);
+            if (FilterGameB2K.Checked)
+                currentFilter.gameexpansions.Add(512);
+            if (FilterGameCQ.Checked)
+                currentFilter.gameexpansions.Add(2048);
+            if (FilterGameAK.Checked)
+                currentFilter.gameexpansions.Add(4096);
+            if (FilterGameAM.Checked)
+                currentFilter.gameexpansions.Add(8192);
+            if (FilterGameEG.Checked)
+                currentFilter.gameexpansions.Add(16384);
+            serverList.Clear();
+            serverBrowserView.Rows.Clear();
+            GetServerList();
         }
     }
 
