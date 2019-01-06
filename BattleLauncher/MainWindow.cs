@@ -11,6 +11,7 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Reflection;
+using static BattleLauncher.Utils;
 
 namespace BattleLauncher
 {
@@ -28,20 +29,30 @@ namespace BattleLauncher
 
         private SearchFilter currentFilter;
 
+        private Task LeaveServer()
+        {
+            return Task.Run(async () =>
+            {
+                toolStripStatusLabel1.Text = "Leaving server...";
+                BattlelogResponse leave = await DeserializeResponseAsync<BattlelogResponse>(await DoHttpRequestAsync(String.Format(URL.BF3LeaveServer, Globals.PersonaId, Globals.CurrentGameId)));
+            });
+            
+        }
+
         private async void RunGame(string ServerGuid)
         {
             Busy = true;
             toolStripDropDownButton1.Enabled = true;
             toolStripStatusLabel1.Text = "Getting server info...";
-            ServerInfo serverInfo = (await Utils.DeserializeResponseAsync<ServerInfoResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3ServerInfoShort, ServerGuid)))).data;
+            ServerInfo serverInfo = (await DeserializeResponseAsync<ServerInfoResponse>(await DoHttpRequestAsync(String.Format(URL.BF3ServerInfoShort, ServerGuid)))).data;
             Globals.CurrentGameId = serverInfo.gameId;
 
             toolStripStatusLabel1.Text = "Getting user info...";
-            PersonaData personaData = (await Utils.DeserializeResponseAsync<PlayablePersonaResponse>(await Utils.DoHttpRequestAsync(URL.BF3PlayablePersona))).data;
+            PersonaData personaData = (await DeserializeResponseAsync<PlayablePersonaResponse>(await DoHttpRequestAsync(URL.BF3PlayablePersona))).data;
             Globals.PersonaId = personaData.personaId;
 
             toolStripStatusLabel1.Text = "Reservating server slot...";
-            ReservationInfo reservation = (await Utils.DeserializeResponseAsync<SlotReservationResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3ReserveSlot, Globals.PersonaId, Globals.CurrentGameId, ServerGuid)))).data;
+            ReservationInfo reservation = (await DeserializeResponseAsync<SlotReservationResponse>(await DoHttpRequestAsync(String.Format(URL.BF3ReserveSlot, Globals.PersonaId, Globals.CurrentGameId, ServerGuid)))).data;
             bool queued = false;
             if (reservation.joinState == "IN_QUEUE")
                 queued = true;
@@ -52,17 +63,12 @@ namespace BattleLauncher
                 {
                     if (Cancel)
                     {
-                        toolStripStatusLabel1.Text = "Leaving server...";
-                        BattlelogResponse leave = await Utils.DeserializeResponseAsync<BattlelogResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3LeaveServer, Globals.PersonaId, Globals.CurrentGameId)));
-                        toolStripStatusLabel1.Text = "Idle";
-                        Cancel = false;
-                        toolStripDropDownButton1.Enabled = false;
-                        Busy = false;
+                        await LeaveServer();
                         return;
                     }
                     try
                     {
-                        QueueStatusInfo queueStatusInfo = (await Utils.DeserializeResponseAsync<QueueStatusResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3QueueStatus, Globals.PersonaId, Globals.CurrentGameId)))).data;
+                        QueueStatusInfo queueStatusInfo = (await DeserializeResponseAsync<QueueStatusResponse>(await DoHttpRequestAsync(String.Format(URL.BF3QueueStatus, Globals.PersonaId, Globals.CurrentGameId)))).data;
                         if (queueStatusInfo.queuePosition == -1)
                             break;
                         toolStripStatusLabel1.Text = String.Format("Queued: {0}", queueStatusInfo.queuePosition);
@@ -77,17 +83,16 @@ namespace BattleLauncher
 
             toolStripStatusLabel1.Text = "Retrieving auth data...";
             string authJsonRaw;
-            authJsonRaw = await Utils.DoHttpRequestAsync(String.Format(URL.BF3AuthData, Globals.PersonaId));
+            authJsonRaw = await DoHttpRequestAsync(String.Format(URL.BF3AuthData, Globals.PersonaId));
             authJsonRaw = authJsonRaw.Substring(1);
             authJsonRaw = authJsonRaw.Substring(0, authJsonRaw.Length - 2);
-            AuthData authData = (await Utils.DeserializeResponseAsync<AuthDataResponse>(authJsonRaw)).data;
+            AuthData authData = (await DeserializeResponseAsync<AuthDataResponse>(authJsonRaw)).data;
             string loginToken = authData.encryptedToken;
             string authCode = authData.authCode;
 
             if (Cancel)
             {
-                toolStripStatusLabel1.Text = "Leaving server...";
-                BattlelogResponse leave = await Utils.DeserializeResponseAsync<BattlelogResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3LeaveServer, Globals.PersonaId, Globals.CurrentGameId)));
+                await LeaveServer();
                 toolStripStatusLabel1.Text = "Idle";
                 Cancel = false;
                 toolStripDropDownButton1.Enabled = false;
@@ -112,13 +117,13 @@ namespace BattleLauncher
                     if (!leavedServer)
                     {
                         toolStripStatusLabel1.Text = "Leaving server...";
-                        BattlelogResponse leave = await Utils.DeserializeResponseAsync<BattlelogResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3LeaveServer, Globals.PersonaId, Globals.CurrentGameId)));
+                        await LeaveServer();
                         leavedServer = true;
                     }
                     toolStripStatusLabel1.Text = "Waiting for game to exit...";
                     try
                     {
-                        await Utils.DoLocalHttpRequestAsync(URL.KillGame);
+                        await DoLocalHttpRequestAsync(URL.KillGame);
                         toolStripStatusLabel1.Text = "Idle";
                         toolStripDropDownButton1.Enabled = false;
                         Cancel = false;
@@ -134,7 +139,7 @@ namespace BattleLauncher
                 string state;
                 try
                 {
-                    state = await Utils.DoLocalHttpRequestAsync(URL.WebHelper);
+                    state = await DoLocalHttpRequestAsync(URL.WebHelper);
                 }
                 catch (Exception)
                 {
@@ -171,15 +176,15 @@ namespace BattleLauncher
         private async void GetServerList()
         {
             currentFilter.offset = serverList.Count;
-            string json = await Utils.DoHttpRequestAsync(URL.BF3SearchServers + Utils.SerializeFilter(currentFilter));
-            ServerListResponse resp = await Utils.DeserializeResponse2Async<ServerListResponse>(json);
+            string json = await DoHttpRequestAsync(URL.BF3SearchServers + SerializeFilter(currentFilter));
+            ServerListResponse resp = await DeserializeResponse2Async<ServerListResponse>(json);
             foreach (var i in resp.data)
             {
                 serverList.Add(i);
                 string playerCountString = String.Format("{0}/{1}", i.slots.normal.current, i.slots.normal.max);
                 if (i.slots.queued.current != 0)
                     playerCountString = String.Format("{0} [{1}]", playerCountString, i.slots.queued.current);
-                serverBrowserView.Rows.Add(serverList.Count - 1, Utils.GetMapName(i.map), i.name, Utils.GetGameModeName(i.mapMode), playerCountString, '-');
+                serverBrowserView.Rows.Add(serverList.Count - 1, GetMapName(i.map), i.name, GetGameModeName(i.mapMode), playerCountString, '-');
                 UpdatePing(serverList.Count - 1);
             }
         }
@@ -187,16 +192,16 @@ namespace BattleLauncher
         private async void UpdateServerInfo(int serverIndex)
         {
             textBox1.Text = serverList[serverIndex].guid;
-            NumPlayersResponse updatedInfo = await Utils.DeserializeResponse2Async<NumPlayersResponse>(await Utils.DoHttpRequestAsync(String.Format(URL.BF3NumPlayersOnServer, serverList[serverIndex].guid)));
+            NumPlayersResponse updatedInfo = await DeserializeResponse2Async<NumPlayersResponse>(await DoHttpRequestAsync(String.Format(URL.BF3NumPlayersOnServer, serverList[serverIndex].guid)));
             string playerCountString = String.Format("{0}/{1}", updatedInfo.slots.normal.current, updatedInfo.slots.normal.max);
             if (updatedInfo.slots.queued.current != 0)
                 playerCountString = String.Format("{0} [{1}]", playerCountString, updatedInfo.slots.queued.current);
             serverList[serverIndex].map = updatedInfo.map;
             serverList[serverIndex].slots = updatedInfo.slots;
             int rowIndex = ServerIndex2Row(serverIndex);
-            serverBrowserView.Rows[rowIndex].Cells["Map"].Value = Utils.GetMapName(updatedInfo.map);
+            serverBrowserView.Rows[rowIndex].Cells["Map"].Value = GetMapName(updatedInfo.map);
             serverBrowserView.Rows[rowIndex].Cells["Players"].Value = playerCountString;
-            serverBrowserView.Rows[rowIndex].Cells["Gamemode"].Value = Utils.GetGameModeName(updatedInfo.mapMode);
+            serverBrowserView.Rows[rowIndex].Cells["Gamemode"].Value = GetGameModeName(updatedInfo.mapMode);
         }
 
         private async void UpdatePing(int serverIndex)
@@ -216,7 +221,7 @@ namespace BattleLauncher
         {
             Globals.BF3GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 3", "Install Dir", null);
             Globals.BF4GameDir = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\EA Games\Battlefield 4", "Install Dir", null);
-            Globals.SessionToken = "03e73a9a56d830856333ebe9b6a24a72";
+            Globals.SessionToken = "44ec883bb2dd72d84db54efbb2fdd74b";
             this.FilterGM1.Text = Properties.Resources.GM1;
             this.FilterGM2.Text = Properties.Resources.GM2;
             this.FilterGM4.Text = Properties.Resources.GM4;
